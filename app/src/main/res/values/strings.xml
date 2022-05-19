@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Apuntes Fotograficos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="session_title">Iniciar Sesion</string>
+    <string name="session_subtitle">Bienvenido, por favor inicia sesión.</string>
+    <string name="email">Correo</string>
+    <string name="password">Contraseña</string>
+    <string name="sign_in">Ingresar</string>
+    <string name="sign_up">Registrarse</string>
+    <string name="register_subtitle">Crea y administra tus apuntes fotográficos de manera fácil y sencilla.</string>
+    <string name="name_lastname">Nombre y apellidos</string>
+    <string name="phone">Telefono</string>
+    <string name="main_title">Bienvenido,</string>
+    <string name="notes">Apuntes</string>
+    <string name="groups">Grupos e invitados</string>
+    <string name="add_category">Añadir categoria</string>
+    <string name="share">Compartor categorías</string>
+    <string name="last_notes">Entradas recientes</string>
+    <string name="delete">Eliminar</string>
+    <string name="modify">Modificar</string>
+    <string name="cancel">Cancelar</string>
+
+</resources>
