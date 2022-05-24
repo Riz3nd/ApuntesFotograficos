@@ -11,24 +11,26 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.apuntesfotograficos.R
 
-class LoginFragment : Fragment() {
+
+class RegisterFragment : Fragment() {
     var navController: NavController? = null
-    lateinit var btn_login_registrar: Button
+    lateinit var btn_registrar: Button
     lateinit var mView:View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         navController = findNavController()
-        mView =  inflater.inflate(R.layout.fragment_login, container, false)
+        mView =  inflater.inflate(R.layout.fragment_register, container, false)
         return mView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btn_login_registrar = mView.findViewById(R.id.btn_login_registrar)
-        btn_login_registrar!!.setOnClickListener { navController!!.navigate(R.id.action_loginFragment_to_registerFragment) }
+        btn_registrar = mView.findViewById(R.id.btn_registrar)
+        btn_registrar.setOnClickListener { navController!!.navigate(R.id.action_registerFragment_to_loginFragment) }
     }
 
 }
