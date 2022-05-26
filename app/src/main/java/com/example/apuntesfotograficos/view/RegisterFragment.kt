@@ -10,27 +10,27 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.apuntesfotograficos.R
+import com.example.apuntesfotograficos.databinding.FragmentRegisterBinding
 
 
 class RegisterFragment : Fragment() {
     var navController: NavController? = null
-    lateinit var btn_registrar: Button
-    lateinit var mView:View
+    private var _binding: FragmentRegisterBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         navController = findNavController()
-        mView =  inflater.inflate(R.layout.fragment_register, container, false)
-        return mView
+        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btn_registrar = mView.findViewById(R.id.btn_registrar)
-        btn_registrar.setOnClickListener { navController!!.navigate(R.id.action_registerFragment_to_loginFragment) }
+        binding.btnRegistrar.setOnClickListener { navController!!.navigate(R.id.action_registerFragment_to_loginFragment) }
     }
 
 }
