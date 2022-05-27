@@ -14,8 +14,9 @@
     <string name="main_title">Bienvenido,</string>
     <string name="notes">Apuntes</string>
     <string name="groups">Grupos e invitados</string>
+    <string name="category">Categorías</string>
     <string name="add_category">Añadir categoria</string>
-    <string name="share">Compartor categorías</string>
+    <string name="share">Compartir categorías</string>
     <string name="last_notes">Entradas recientes</string>
     <string name="delete">Eliminar</string>
     <string name="modify">Modificar</string>

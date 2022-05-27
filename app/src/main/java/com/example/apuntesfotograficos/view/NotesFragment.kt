@@ -5,33 +5,29 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.apuntesfotograficos.R
-import com.example.apuntesfotograficos.databinding.FragmentLoginBinding
-import com.example.apuntesfotograficos.databinding.FragmentMainBinding
+import com.example.apuntesfotograficos.databinding.FragmentNotesBinding
 
-class MainFragment : Fragment() {
+class NotesFragment : Fragment() {
     var navController: NavController? = null
-    private var _binding: FragmentMainBinding? = null
+    private var _binding: FragmentNotesBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         navController = findNavController()
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentNotesBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.cardApuntes.setOnClickListener { navController?.navigate(R.id.action_mainFragment_to_notesFragment) }
-        binding.cardGrupos.setOnClickListener { Toast.makeText(context,"Grupos",Toast.LENGTH_LONG).show() }
+        binding.btnBackNotes.setOnClickListener { navController?.navigate(R.id.action_notesFragment_to_mainFragment) }
     }
 
     override fun onDestroyView() {
