@@ -1,34 +1,30 @@
 package com.example.apuntesfotograficos.view
 
-import android.content.Intent
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.apuntesfotograficos.R
-import com.example.apuntesfotograficos.databinding.FragmentLoginBinding
 import com.example.apuntesfotograficos.databinding.FragmentMainBinding
 import com.example.apuntesfotograficos.utils.CameraUtil
+import com.example.apuntesfotograficos.utils.CommonUtils
+import com.example.apuntesfotograficos.utils.Constans
+import com.example.apuntesfotograficos.utils.ImageAdapter
 import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MainFragment : Fragment() {
     var navController: NavController? = null
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     var camUtil:CameraUtil? = null
-    var uriImg:String? = null
-
+    var imagenes:MutableList<String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,26 +39,34 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecycler()
         camUtil = CameraUtil(requireActivity())
         binding.cardApuntes.setOnClickListener { navController?.navigate(R.id.action_mainFragment_to_notesFragment) }
         binding.cardGrupos.setOnClickListener { Toast.makeText(context,"Grupos",Toast.LENGTH_LONG).show() }
-        binding.addNote.setOnClickListener{ camUtil!!.captureImage(/*binding.vista*/) }
-    }
-
-    override public fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        uriImg = camUtil?.uriNote(resultCode)
-        super.onActivityResult(requestCode, resultCode, data)
+        binding.addNote.setOnClickListener{
+            camUtil!!.captureImage()
+            imagenes = CommonUtils.listarImagenes()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if(!camUtil?.dirImg.isNullOrBlank())
-            binding.vista.setImageURI(Uri.parse(camUtil!!.dirImg))
+        imagenes = CommonUtils.listarImagenes()
+        initRecycler()
+        imagenes?.forEach { println("IMAGENES -> $it") }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun initRecycler(){
+        if(!imagenes.isNullOrEmpty()){
+            val adapter = ImageAdapter(imagenes)
+            binding.rvImages.layoutManager = LinearLayoutManager(context)
+            binding.rvImages.adapter = adapter
+        }
     }
 
 }
