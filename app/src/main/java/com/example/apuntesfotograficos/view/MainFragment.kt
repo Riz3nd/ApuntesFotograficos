@@ -1,13 +1,10 @@
 package com.example.apuntesfotograficos.view
 
-import android.media.Image
-import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,9 +12,8 @@ import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentMainBinding
 import com.example.apuntesfotograficos.utils.CameraUtil
 import com.example.apuntesfotograficos.utils.CommonUtils
-import com.example.apuntesfotograficos.utils.Constans
+import com.example.apuntesfotograficos.utils.FragmentUtils
 import com.example.apuntesfotograficos.utils.ImageAdapter
-import java.io.File
 
 class MainFragment : Fragment() {
     var navController: NavController? = null
@@ -42,19 +38,20 @@ class MainFragment : Fragment() {
         initRecycler()
         camUtil = CameraUtil(requireActivity())
         binding.cardApuntes.setOnClickListener { navController?.navigate(R.id.action_mainFragment_to_notesFragment) }
-        binding.cardGrupos.setOnClickListener { Toast.makeText(context,"Grupos",Toast.LENGTH_LONG).show() }
+        binding.cardGrupos.setOnClickListener {
+                FragmentUtils.createDialog(requireActivity());
+        }
         binding.addNote.setOnClickListener{
             camUtil!!.captureImage()
-            imagenes = CommonUtils.listarImagenes()
+            imagenes = CommonUtils.getListImages()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        imagenes = CommonUtils.listarImagenes()
+        imagenes = CommonUtils.getListImages()
         camUtil?.resultNote()
         initRecycler()
-//        imagenes?.forEach { println("IMAGENES -> $it") }
     }
 
     override fun onDestroyView() {
