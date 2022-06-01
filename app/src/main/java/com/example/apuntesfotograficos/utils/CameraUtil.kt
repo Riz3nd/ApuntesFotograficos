@@ -90,12 +90,4 @@ class CameraUtil(activity: Activity) {
         return res
     }
 
-//    fun listarImagenes() {
-//        var directory = File(Constans.URL_IMAGES)
-//        var listaImagenes: Array<File>? = null
-//        directory.walk().forEach {
-//            listaImagenes = arrayOf(it)
-//        }
-//    }
-
 }

@@ -52,8 +52,9 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         imagenes = CommonUtils.listarImagenes()
+        camUtil?.resultNote()
         initRecycler()
-        imagenes?.forEach { println("IMAGENES -> $it") }
+//        imagenes?.forEach { println("IMAGENES -> $it") }
     }
 
     override fun onDestroyView() {
@@ -63,7 +64,7 @@ class MainFragment : Fragment() {
 
     fun initRecycler(){
         if(!imagenes.isNullOrEmpty()){
-            val adapter = ImageAdapter(imagenes)
+            val adapter = ImageAdapter(imagenes, context)
             binding.rvImages.layoutManager = LinearLayoutManager(context)
             binding.rvImages.adapter = adapter
         }

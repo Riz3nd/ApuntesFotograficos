@@ -11,7 +11,8 @@ class CommonUtils {
             directory.walk().forEach {
                 if (it != null) listaImagenes.add("$it")
             }
-            listaImagenes.removeAt(0)
+            if(listaImagenes.size > 0)
+                listaImagenes.removeAt(0)
             println("TAMAÑO -----> ${listaImagenes?.size}")
             return listaImagenes
         }
