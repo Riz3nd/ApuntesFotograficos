@@ -34,13 +34,6 @@ class ImageAdapter(/*titles: Array<String>,*/ images:MutableList<String>?, conte
 
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-//        viewHolder.textView.text = title.get(position)
-//        viewHolder.imgView.setImageBitmap(getBitmap(image?.get(position)))
-//        if (context != null) {
-//            Picasso.Builder(context).build().load(Uri.parse(image?.get(position))).into(viewHolder.imgView)
-//        }
-
-        //Condiciono para ver si el resultado es nulo o vació
         if(image?.get(position) == null || image?.get(position).isEmpty()){
             viewHolder.imgView.setImageResource(R.drawable.note_view); //reemplaza la imagen
         }else{
