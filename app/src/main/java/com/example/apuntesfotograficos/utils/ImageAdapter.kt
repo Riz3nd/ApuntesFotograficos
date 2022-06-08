@@ -32,19 +32,16 @@ class ImageAdapter(/*titles: Array<String>,*/ images:MutableList<String>?, conte
         return ViewHolder(view)
     }
 
-
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         if(image?.get(position) == null || image?.get(position).isEmpty()){
-            viewHolder.imgView.setImageResource(R.drawable.note_view); //reemplaza la imagen
+            viewHolder.imgView.setImageResource(R.drawable.note_view);
         }else{
-            //Pero si me devuelve una url uso la librería picasso
             println("RECYCLER -> ${Uri.parse(image?.get(position))}")
            Picasso.get()
                 .load("file://${image?.get(position)}")
-                .error(R.drawable.share) //en caso que la url no sea válida muestro otra imagen
+                .error(R.drawable.share)
                 .into(viewHolder.imgView);
         }
-
 
     }
 
