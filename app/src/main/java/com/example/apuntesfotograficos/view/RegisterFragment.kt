@@ -1,22 +1,28 @@
 package com.example.apuntesfotograficos.view
 
 import android.os.Bundle
+import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentRegisterBinding
+import com.example.apuntesfotograficos.interactor.RegisterUser
+import com.example.apuntesfotograficos.interfaces.IRegister
+import com.example.apuntesfotograficos.model.User
+import com.example.apuntesfotograficos.presenter.CameraPesenter
+import com.example.apuntesfotograficos.presenter.RegisterPresenter
+import java.util.regex.Pattern
 
 
-class RegisterFragment : Fragment() {
+class RegisterFragment : Fragment(), IRegister.View {
     var navController: NavController? = null
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
+    lateinit var presenter: RegisterPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,13 +30,31 @@ class RegisterFragment : Fragment() {
     ): View? {
         navController = findNavController()
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        presenter = RegisterPresenter(RegisterUser())
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnRegistrar.setOnClickListener { navController!!.navigate(R.id.action_registerFragment_to_loginFragment) }
+        var user = User()
+
+        binding.btnRegistrar.setOnClickListener {
+            user.user_name = binding.etName.text.toString()
+            user.user_email = binding.etEmail.text.toString()
+            user.user_password = binding.etRePassword.text.toString()
+            if(validateFields()){
+                presenter.registerUser(user, context)
+                navController!!.navigate(R.id.action_registerFragment_to_loginFragment) }
+            }
+    }
+
+    fun validateFields():Boolean{
+        var name  = binding.etName.text.toString()
+        var email  = binding.etEmail.text.toString()
+        var passwd = binding.etRePassword.text.toString()
+        var passwd2 = binding.etPassword.text.toString()
+        var pattern = Patterns.EMAIL_ADDRESS
+        return (passwd.equals(passwd2) && !name.isNullOrBlank() && pattern.matcher(email).matches())
     }
 
 }

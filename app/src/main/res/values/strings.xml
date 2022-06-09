@@ -6,6 +6,7 @@
     <string name="session_subtitle">Bienvenido, por favor ingresa tus credenciales.</string>
     <string name="email">Correo</string>
     <string name="password">Contraseña</string>
+    <string name="re_enter_password">Volver a ingresar contraseña</string>
     <string name="sign_in">Ingresar</string>
     <string name="sign_up">Registrarse</string>
     <string name="register_subtitle">Crea y administra tus apuntes fotográficos de manera fácil y sencilla.</string>
@@ -21,5 +22,7 @@
     <string name="delete">Eliminar</string>
     <string name="modify">Modificar</string>
     <string name="cancel">Cancelar</string>
+    <string name="create_note">Crear Apunte</string>
+    <string name="accept">Aceptar</string>
 
 </resources>

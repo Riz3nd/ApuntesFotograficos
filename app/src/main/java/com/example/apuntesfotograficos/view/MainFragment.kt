@@ -24,7 +24,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     var navController: NavController? = null
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-    var imagenes:MutableList<String>? = null
+//    var imagenes:MutableList<String>? = null
     lateinit var cameraPresenter:CameraPesenter
 
     override fun onCreateView(
@@ -48,7 +48,6 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        imagenes = CommonUtils.getListImages()
         initRecycler()
     }
 
@@ -58,6 +57,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     }
 
     fun initRecycler(){
+        var imagenes = CommonUtils.getListImages()
         if(!imagenes.isNullOrEmpty()){
             val adapter = ImageAdapter(imagenes, context)
             binding.rvImages.layoutManager = LinearLayoutManager(context)
@@ -71,7 +71,6 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                     UIUtils.createDialog(requireActivity())
                 }
 
-
             })
         }
     }
@@ -82,7 +81,9 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     override fun onClick(view: View?) {
         when(view?.id){
-            R.id.add_note -> cameraPresenter?.getImage()
+            R.id.add_note -> {
+                UIUtils.createDialogNote(requireActivity(), cameraPresenter)
+            }
             R.id.card_apuntes -> navController?.navigate(R.id.action_mainFragment_to_notesFragment)
             R.id.card_grupos -> UIUtils.createDialog(requireActivity())
         }

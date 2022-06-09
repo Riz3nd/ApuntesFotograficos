@@ -92,13 +92,13 @@
                     style="@style/subtitle_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/phone" />
+                    android:text="@string/re_enter_password" />
 
                 <EditText
-                    android:id="@+id/et_phone"
+                    android:id="@+id/et_re_password"
                     style="@style/et_style"
                     android:layout_width="match_parent"
-                    android:inputType="number" />
+                    android:inputType="textPassword" />
 
                 <Space
                     android:layout_width="match_parent"
