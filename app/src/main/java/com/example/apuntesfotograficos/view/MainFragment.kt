@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -13,6 +14,7 @@ import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentMainBinding
 import com.example.apuntesfotograficos.interactor.Camera
 import com.example.apuntesfotograficos.interfaces.ICamera
+import com.example.apuntesfotograficos.interfaces.onItemClickListener
 import com.example.apuntesfotograficos.presenter.CameraPesenter
 import com.example.apuntesfotograficos.utils.CommonUtils
 import com.example.apuntesfotograficos.utils.UIUtils
@@ -60,6 +62,17 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
             val adapter = ImageAdapter(imagenes, context)
             binding.rvImages.layoutManager = LinearLayoutManager(context)
             binding.rvImages.adapter = adapter
+            adapter.setOnItemListener(object : onItemClickListener{
+                override fun onItemClick(position: Int) {
+                    Toast.makeText(context,"$position",Toast.LENGTH_LONG).show()
+                }
+
+                override fun onItemLongClick(position: Int) {
+                    UIUtils.createDialog(requireActivity())
+                }
+
+
+            })
         }
     }
 

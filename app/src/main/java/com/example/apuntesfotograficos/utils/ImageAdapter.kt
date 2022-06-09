@@ -8,28 +8,36 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apuntesfotograficos.R
+import com.example.apuntesfotograficos.interfaces.onItemClickListener
 import com.squareup.picasso.Picasso
 
 class ImageAdapter(/*titles: Array<String>,*/ images:MutableList<String>?, context: Context?) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
+    lateinit var mListener: onItemClickListener
+
 //    var title: Array<String> = titles
     val image: MutableList<String>? = images
     val context = context
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    class ViewHolder(view: View, listener: onItemClickListener) : RecyclerView.ViewHolder(view) {
 //        val textView: TextView
         val imgView: ImageView
 
         init {
 //            textView = view.findViewById(R.id.img_card)
             imgView = view.findViewById(R.id.img_card)
+            imgView.setOnClickListener { listener.onItemClick(adapterPosition) }
+            imgView.setOnLongClickListener {
+                listener.onItemLongClick(adapterPosition)
+                true
+            }
         }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.image_list_view, viewGroup, false)
-
-        return ViewHolder(view)
+        return ViewHolder(view, mListener)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
@@ -43,9 +51,15 @@ class ImageAdapter(/*titles: Array<String>,*/ images:MutableList<String>?, conte
                 .into(viewHolder.imgView);
         }
 
+
     }
 
     override fun getItemCount(): Int {
         return image!!.size
     }
+
+    fun setOnItemListener(listener: onItemClickListener){
+        mListener = listener
     }
+
+}
