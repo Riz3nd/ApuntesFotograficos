@@ -1,4 +1,4 @@
-package com.example.apuntesfotograficos.interactor
+package com.example.apuntesfotograficos.model
 
 class Group {
     var groupId:Int? = null

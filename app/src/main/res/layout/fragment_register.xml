@@ -35,7 +35,7 @@
                     style="@style/title_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sign_up" />
+                    android:text="@string/title_sign_up" />
 
                 <TextView
                     style="@style/subtitle_style"
@@ -92,10 +92,10 @@
                     style="@style/subtitle_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/re_enter_password" />
+                    android:text="@string/password" />
 
                 <EditText
-                    android:id="@+id/et_re_password"
+                    android:id="@+id/et_password"
                     style="@style/et_style"
                     android:layout_width="match_parent"
                     android:inputType="textPassword" />
@@ -108,27 +108,41 @@
                     style="@style/subtitle_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/password" />
+                    android:text="@string/re_enter_password" />
 
                 <EditText
-                    android:id="@+id/et_password"
+                    android:id="@+id/et_re_password"
                     style="@style/et_style"
                     android:layout_width="match_parent"
                     android:inputType="textPassword" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_registrar"
-                style="@style/button_style"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_marginHorizontal="30dp"
                 android:layout_marginVertical="20dp"
-                android:text="@string/sign_up"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-                app:layout_constraintVertical_bias="0.9" />
+                app:layout_constraintVertical_bias="0.9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btn_registrar"
+                    style="@style/button_style"
+                    android:text="@string/sign_up"/>
+                <Button
+                    android:id="@+id/btn_back"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel" />
+            </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

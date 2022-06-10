@@ -1,4 +1,4 @@
-package com.example.apuntesfotograficos.interactor
+package com.example.apuntesfotograficos.model
 
 import java.util.*
 

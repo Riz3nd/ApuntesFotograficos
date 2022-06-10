@@ -6,23 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentRegisterBinding
-import com.example.apuntesfotograficos.interactor.RegisterUser
-import com.example.apuntesfotograficos.interfaces.IRegister
+import com.example.apuntesfotograficos.interactor.DBInteractor
+import com.example.apuntesfotograficos.interfaces.IDatabase
 import com.example.apuntesfotograficos.model.User
-import com.example.apuntesfotograficos.presenter.CameraPesenter
-import com.example.apuntesfotograficos.presenter.RegisterPresenter
-import java.util.regex.Pattern
+import com.example.apuntesfotograficos.presenter.DBPresenter
 
 
-class RegisterFragment : Fragment(), IRegister.View {
+class RegisterFragment : Fragment(), IDatabase.View {
     var navController: NavController? = null
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
-    lateinit var presenter: RegisterPresenter
+    private lateinit var presenter: DBPresenter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +29,7 @@ class RegisterFragment : Fragment(), IRegister.View {
     ): View? {
         navController = findNavController()
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        presenter = RegisterPresenter(RegisterUser())
+        presenter = DBPresenter(DBInteractor())
         return binding.root
     }
 
@@ -44,11 +43,14 @@ class RegisterFragment : Fragment(), IRegister.View {
             user.user_password = binding.etRePassword.text.toString()
             if(validateFields()){
                 presenter.registerUser(user, context)
-                navController!!.navigate(R.id.action_registerFragment_to_loginFragment) }
+                navController!!.navigate(R.id.action_registerFragment_to_loginFragment)
+            } else
+                Toast.makeText(context, "Debe llenar los campos",  Toast.LENGTH_LONG).show()
             }
+        binding.btnBack.setOnClickListener { navController!!.navigate(R.id.action_registerFragment_to_loginFragment) }
     }
 
-    fun validateFields():Boolean{
+    private fun validateFields():Boolean{
         var name  = binding.etName.text.toString()
         var email  = binding.etEmail.text.toString()
         var passwd = binding.etRePassword.text.toString()

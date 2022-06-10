@@ -1,4 +1,4 @@
-package com.example.apuntesfotograficos.api
+package com.example.apuntesfotograficos.db
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

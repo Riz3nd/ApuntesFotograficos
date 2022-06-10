@@ -1,6 +1,7 @@
 package com.example.apuntesfotograficos.view
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,10 +40,14 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val preferencias  = requireActivity().
+        getSharedPreferences("userData", Context.MODE_PRIVATE)
+        binding.tvMainTitle.text = "${getString(R.string.main_title)} ${preferencias.getString("name", "")}"
         initRecycler()
         binding.cardApuntes.setOnClickListener(this)
         binding.cardGrupos.setOnClickListener(this)
         binding.addNote.setOnClickListener(this)
+        binding.btnProfile.setOnClickListener(this)
 
     }
 
@@ -86,8 +91,8 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
             }
             R.id.card_apuntes -> navController?.navigate(R.id.action_mainFragment_to_notesFragment)
             R.id.card_grupos -> UIUtils.createDialog(requireActivity())
+            R.id.btn_profile -> navController?.navigate(R.id.action_mainFragment_to_userFragment)
         }
     }
-
 
 }
