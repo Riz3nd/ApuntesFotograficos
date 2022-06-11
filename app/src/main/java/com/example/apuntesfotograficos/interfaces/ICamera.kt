@@ -9,12 +9,12 @@ interface ICamera {
     }
 
     interface Presenter{
-        fun getImage()
+        fun getImage(name: String)
     }
 
     interface Iterator{
         fun initCamera(activity: Activity)
-        fun captureImage()
+        fun captureImage(name: String)
     }
 
 }

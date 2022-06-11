@@ -93,11 +93,8 @@
             android:layout_height="10dp"/>
         <Button
             android:id="@+id/btn_login_registrar"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_marginHorizontal="30dp"
+            style="@style/button_style_no_bg"
             android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/sign_up" />
     </LinearLayout>
 

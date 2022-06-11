@@ -5,7 +5,14 @@
     android:layout_gravity="center"
     android:backgroundTint="#FEFDF9"
     android:layout_width="292dp"
-    android:layout_height="292dp">
+    android:layout_height="436dp">
+    <ImageView
+        android:id="@+id/btn_close"
+        android:src="@drawable/ic_close"
+        android:layout_gravity="top|end"
+        android:layout_margin="5dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_marginHorizontal="30dp"
@@ -13,72 +20,55 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:layout_weight="0.1"
-            android:text="@string/create_note"
+            android:text="Perfil"
             style="@style/title_style"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <LinearLayout
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="10dp"/>
-            <TextView
-                android:text="@string/category"
-                style="@style/subtitle_style"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="20dp"/>
-            <Spinner
-                android:id="@+id/spinner_category"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"/>
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="20dp"/>
-            <EditText
-                android:id="@+id/et_name_note"
-                android:layout_gravity="center"
-                style="@style/et_style_dialog"
-                android:hint="Nombre apunte"
-                android:textAlignment="center"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"/>
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="50dp"/>
-        </LinearLayout>
-<!--        <LinearLayout
-            android:layout_weight="1"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:src="@drawable/trash"
+                android:src="@drawable/profile"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
+                android:id="@+id/user_name"
                 android:layout_weight="1"
-                android:text="@string/delete"
+                android:text="Usuario"
                 style="@style/subtitle_style"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-        </LinearLayout>-->
-        <Button
-            android:id="@+id/btn_dialog_ok"
-            style="@style/button_style"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/accept" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_weight="0.5"
+                android:text="Correo:"
+                style="@style/subtitle_style"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_user_email"
+                android:layout_weight="1"
+                android:text="corredo@correo.co"
+                style="@style/subtitle_style"
+                android:gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
+    <Button
+        android:id="@+id/btn_sign_out"
+        style="@style/button_style_no_bg"
+        android:layout_gravity="bottom"
+        android:text="@string/sign_out" />
 </androidx.cardview.widget.CardView>

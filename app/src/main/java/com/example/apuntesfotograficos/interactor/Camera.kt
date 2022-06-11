@@ -19,12 +19,12 @@ class Camera: ICamera.Iterator {
     var mActivty: Activity? = null
 
     @Throws(IOException::class)
-    fun createImageFile(): File {
+    fun createImageFile(name: String): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File = mActivty?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
         return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
+            "${name}_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
@@ -37,13 +37,13 @@ class Camera: ICamera.Iterator {
         mActivty = activity
     }
 
-    override fun captureImage() {
+    override fun captureImage(name: String) {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             // Ensure that there's a camera activity to handle the intent
             takePictureIntent.resolveActivity(mActivty!!.packageManager)?.also {
                 // Create the File where the photo should go
                 val photoFile: File? = try {
-                    createImageFile()
+                    createImageFile(name)
                 } catch (ex: IOException) {
                     // Error occurred while creating the File
                     null

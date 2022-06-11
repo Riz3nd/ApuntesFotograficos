@@ -56,7 +56,8 @@ class RegisterFragment : Fragment(), IDatabase.View {
         var passwd = binding.etRePassword.text.toString()
         var passwd2 = binding.etPassword.text.toString()
         var pattern = Patterns.EMAIL_ADDRESS
-        return (passwd.equals(passwd2) && !name.isNullOrBlank() && pattern.matcher(email).matches())
+        return ((passwd.length > 6 && passwd2.length > 6) && (passwd.equals(passwd2) &&
+                !name.isNullOrBlank()) && pattern.matcher(email).matches())
     }
 
 }

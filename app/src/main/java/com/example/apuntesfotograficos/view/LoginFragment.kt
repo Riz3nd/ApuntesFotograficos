@@ -56,8 +56,10 @@ class LoginFragment : Fragment(), IDatabase.View {
                     editor.commit()
                     navController!!.navigate(R.id.action_loginFragment_to_mainFragment)
                 }
-            }else
-                Toast.makeText(context, "Ingrese su correo y contraseña",  Toast.LENGTH_LONG).show()
+            }else{
+                navController!!.navigate(R.id.action_loginFragment_to_mainFragment)
+                Toast.makeText(context, "Credenciales inválidas",  Toast.LENGTH_LONG).show()
+            }
         }
     }
 

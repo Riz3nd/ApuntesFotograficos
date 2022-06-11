@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.apuntesfotograficos.MainActivity.Companion.uiUtils
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentMainBinding
 import com.example.apuntesfotograficos.interactor.Camera
@@ -63,8 +64,9 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     fun initRecycler(){
         var imagenes = CommonUtils.getListImages()
+        var titles = CommonUtils.getListTitles()
         if(!imagenes.isNullOrEmpty()){
-            val adapter = ImageAdapter(imagenes, context)
+            val adapter = ImageAdapter(titles, imagenes, context)
             binding.rvImages.layoutManager = LinearLayoutManager(context)
             binding.rvImages.adapter = adapter
             adapter.setOnItemListener(object : onItemClickListener{
@@ -73,7 +75,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                 }
 
                 override fun onItemLongClick(position: Int) {
-                    UIUtils.createDialog(requireActivity())
+                    uiUtils.createDialog()
                 }
 
             })
@@ -86,12 +88,11 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     override fun onClick(view: View?) {
         when(view?.id){
-            R.id.add_note -> {
-                UIUtils.createDialogNote(requireActivity(), cameraPresenter)
-            }
+            R.id.add_note -> { uiUtils.createDialogNote(cameraPresenter) }
             R.id.card_apuntes -> navController?.navigate(R.id.action_mainFragment_to_notesFragment)
-            R.id.card_grupos -> UIUtils.createDialog(requireActivity())
-            R.id.btn_profile -> navController?.navigate(R.id.action_mainFragment_to_userFragment)
+            R.id.card_grupos -> uiUtils.createDialog()
+            R.id.btn_profile -> { uiUtils.profileDialog(object : onItemClickListener.onClickDialog{
+                override fun onClickDialog() { navController?.navigate(R.id.action_mainFragment_to_loginFragment) } }) }
         }
     }
 

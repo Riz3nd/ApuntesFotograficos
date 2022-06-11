@@ -134,10 +134,8 @@
                     android:text="@string/sign_up"/>
                 <Button
                     android:id="@+id/btn_back"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/button_style_no_bg"
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:text="@string/cancel" />
             </LinearLayout>
 

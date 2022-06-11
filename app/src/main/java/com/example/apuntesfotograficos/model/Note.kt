@@ -3,17 +3,12 @@ package com.example.apuntesfotograficos.model
 import java.util.*
 
 class Note {
-    var noteId:Int? = null
-    var noteCategory:Int? = null
-    var noteDate: Date? = null
-    var noteName:String? = null
-    var noteContent:String? = null
-    var noteStatus:Boolean = false
-    var noteSrc: Base64? = null
-    var noteShare:Int? = null
-}
-
-class NoteCategory{
-    var categoryId:Int? = null
-    var categoryName:String? = null
+    var note_id:Int? = null
+    var note_category:Int? = null
+    var note_date: Date? = null
+    var note_name:String? = null
+    var note_content:String? = null
+    var note_status:Boolean = false
+    var note_src: String? = null
+    var note_share:Int? = null
 }

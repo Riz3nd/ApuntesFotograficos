@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.apuntesfotograficos.db.AdminSQLiteOpenHelper
 import com.example.apuntesfotograficos.interfaces.IDatabase
+import com.example.apuntesfotograficos.model.Note
 import com.example.apuntesfotograficos.model.User
 
 class DBInteractor:IDatabase.Iterator {
@@ -40,6 +41,16 @@ class DBInteractor:IDatabase.Iterator {
         Log.e("InitSession","${userData?.user_name} - ${userData?.user_email}")
         bd.close()
         return userData
+    }
+
+    override fun createNote(note: Note, context: Context?) {
+        val admin = AdminSQLiteOpenHelper(context,"note", null, 1)
+        val bd = admin.writableDatabase
+        var registro = ContentValues()
+        registro.put("user_name",note.note_name)
+        bd.insert("usuario", null, registro)
+        bd.close()
+        Toast.makeText(context,"Registro Exitoso!",Toast.LENGTH_LONG).show()
     }
 
 }
