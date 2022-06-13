@@ -4,10 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-class User(
+class Category(
     @PrimaryKey(autoGenerate = true)
-    var user_id:Int,
-    var user_name:String,
-    var user_email:String,
-    var user_password:String
+    var cate_id:Int,
+    var cate_name:String
 )

@@ -5,10 +5,10 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.widget.*
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.interfaces.onItemClickListener
+import com.example.apuntesfotograficos.model.Category
 import com.example.apuntesfotograficos.presenter.CameraPesenter
 
 class UIUtils(activity: Activity) {
@@ -30,23 +30,30 @@ class UIUtils(activity: Activity) {
         btnDialogCancel.setOnClickListener { dialog.dismiss() }
     }
 
-    fun createDialogNote(presenter: CameraPesenter) {
+    fun createDialogNote(/*presenter: CameraPesenter, */listCategory: List<Category>):Dialog {
         val dialog = Dialog(mActivity)
         dialog.setContentView(R.layout.dialog_create_note)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val btnDialogCancel = dialog.findViewById<Button>(R.id.btn_dialog_ok)
-        val etNameNote = dialog.findViewById<EditText>(R.id.et_name_note)
         val spinner_category = dialog.findViewById<Spinner>(R.id.spinner_category)
-        var array = arrayOf("Calculo","Fisica")
+        var mutableList = mutableListOf<String>()
+        listCategory.forEach{
+            mutableList.add(it.cate_name)
+        }
+        var array = mutableList.toTypedArray()
         val adaterSpinner = ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, array)
         spinner_category.adapter = adaterSpinner
         dialog.create()
         dialog.show()
-        btnDialogCancel.setOnClickListener {
-            var name = "${etNameNote.text}*${spinner_category.selectedItem}-"
-            presenter.getImage(name)
-            dialog.dismiss()
-        }
+        return dialog
+    }
+
+    fun createDialogCategory():Dialog {
+        val dialog = Dialog(mActivity)
+        dialog.setContentView(R.layout.dialog_create_category)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.create()
+        dialog.show()
+        return dialog
     }
 
     fun profileDialog(listener: onItemClickListener.onClickDialog) {

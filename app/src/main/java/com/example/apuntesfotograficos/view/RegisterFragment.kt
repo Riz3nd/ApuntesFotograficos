@@ -7,14 +7,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.apuntesfotograficos.MainActivity
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentRegisterBinding
 import com.example.apuntesfotograficos.interactor.DBInteractor
 import com.example.apuntesfotograficos.interfaces.IDatabase
 import com.example.apuntesfotograficos.model.User
 import com.example.apuntesfotograficos.presenter.DBPresenter
+import kotlinx.coroutines.launch
 
 
 class RegisterFragment : Fragment(), IDatabase.View {
@@ -22,6 +25,7 @@ class RegisterFragment : Fragment(), IDatabase.View {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
     private lateinit var presenter: DBPresenter
+    var userDao = MainActivity.dbRoom.userDao()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,14 +39,17 @@ class RegisterFragment : Fragment(), IDatabase.View {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var user = User()
-
         binding.btnRegistrar.setOnClickListener {
-            user.user_name = binding.etName.text.toString()
-            user.user_email = binding.etEmail.text.toString()
-            user.user_password = binding.etRePassword.text.toString()
             if(validateFields()){
-                presenter.registerUser(user, context)
+//                presenter.registerUser(user, context)
+                lifecycleScope.launch {
+                    userDao.insertUser(User(
+                        0,
+                        binding.etName.text.toString(),
+                        binding.etEmail.text.toString(),
+                        binding.etRePassword.text.toString()
+                    ))
+                }
                 navController!!.navigate(R.id.action_registerFragment_to_loginFragment)
             } else
                 Toast.makeText(context, "Debe llenar los campos",  Toast.LENGTH_LONG).show()

@@ -43,6 +43,7 @@
                 android:layout_width="129dp"
                 android:layout_height="126dp">
                 <LinearLayout
+                    android:id="@+id/btn_add_category"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_width="match_parent"

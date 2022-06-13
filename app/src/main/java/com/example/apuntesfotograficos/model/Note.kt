@@ -1,14 +1,21 @@
 package com.example.apuntesfotograficos.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.*
 
-class Note {
-    var note_id:Int? = null
-    var note_category:Int? = null
-    var note_date: Date? = null
-    var note_name:String? = null
-    var note_content:String? = null
-    var note_status:Boolean = false
-    var note_src: String? = null
-    var note_share:Int? = null
-}
+@Entity
+data class Note(
+    @PrimaryKey(autoGenerate = true)
+    val note_id:Int,
+    val note_name:String,
+    val note_category:String,
+    val note_date: String,
+    val note_content:String,
+    val note_status:Boolean,
+    val note_src: String,
+    val note_share:Int
+)
+
+
+

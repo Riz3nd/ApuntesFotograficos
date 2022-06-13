@@ -25,6 +25,9 @@
     <string name="modify">Modificar</string>
     <string name="cancel">Cancelar</string>
     <string name="create_note">Crear Apunte</string>
+    <string name="create_category">Crear Categoría</string>
     <string name="accept">Aceptar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
