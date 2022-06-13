@@ -25,6 +25,7 @@ import com.example.apuntesfotograficos.interfaces.onItemClickListener
 import com.example.apuntesfotograficos.model.Note
 import com.example.apuntesfotograficos.presenter.CameraPesenter
 import com.example.apuntesfotograficos.utils.CommonUtils
+import com.example.apuntesfotograficos.utils.Constans.Companion.URL_IMAGES
 import com.example.apuntesfotograficos.utils.ImageAdapter
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -36,6 +37,9 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     private val binding get() = _binding!!
 //    var imagenes:MutableList<String>? = null
     lateinit var cameraPresenter:CameraPesenter
+    var name:String = ""
+    var timeStamp:String = ""
+    var cate:String = ""
     var noteDao = MainActivity.dbRoom.noteDao()
     var categoryDao = MainActivity.dbRoom.categoryDao()
 
@@ -65,6 +69,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     override fun onResume() {
         super.onResume()
         initRecycler()
+        isSaveNote()
     }
 
     override fun onDestroyView() {
@@ -92,6 +97,21 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
         }
     }
 
+    fun isSaveNote(){
+        var titles = CommonUtils.getListTitles()
+        titles?.forEach {
+            if(it.contains("$name")){
+                println("CONTIENEEEEEEEEEEEEEEEEE ----> $it")
+                lifecycleScope.launch {
+                    noteDao.insertNote(Note(0,name,
+                        cate,"${timeStamp}", "n/a",
+                        false, "${URL_IMAGES}$it",0))
+                }
+                return
+            }
+        }
+    }
+
     override fun getCamera():Activity {
         return requireActivity()
     }
@@ -108,15 +128,16 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                     val etNameNote = dialog.findViewById<EditText>(R.id.et_name_note)
                     val spinner_category = dialog.findViewById<Spinner>(R.id.spinner_category)
                     btnDialogOK.setOnClickListener {
-                        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-/*                        lifecycleScope.launch {
-                            noteDao.insertNote(Note(0,"${etNameNote.text}",
-                                "${spinner_category.selectedItem}","${timeStamp}", "saludos gente",
-                                false,"as123da",0))
-                        }*/
-                        var name = "${etNameNote.text}*${spinner_category.selectedItem}"
-                        cameraPresenter.getImage(name, timeStamp)
-                        println("NOTA ---------------> ${name}")
+                        timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                        name = "${etNameNote.text}"
+                        cate = "${spinner_category.selectedItem}"
+                        cameraPresenter.getImage("${name}_${cate}", timeStamp)
+//                        lifecycleScope.launch {
+//                            if(!currentPhotoPath.isNullOrBlank())
+//                                noteDao.insertNote(Note(0,"${etNameNote.text}",
+//                                    "${spinner_category.selectedItem}","${timeStamp}", "saludos gente",
+//                                    false,"${currentPhotoPath}",0))
+//                        }
                         dialog.dismiss()
                     }
 

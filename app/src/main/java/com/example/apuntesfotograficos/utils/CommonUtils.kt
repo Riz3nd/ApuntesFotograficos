@@ -29,7 +29,7 @@ class CommonUtils {
 
             directory.walk().forEach {
                 if (it != null){
-                    listaTitulos.add("${it.toString().replace(Constans.URL_IMAGES,"*")}")
+                    listaTitulos.add("${it.toString().replace(Constans.URL_IMAGES,"")}")
                 }
             }
 //            if(listaTitulos.size > 0)
