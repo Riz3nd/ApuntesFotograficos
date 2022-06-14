@@ -27,7 +27,7 @@ class LoginFragment : Fragment(), IDatabase.View {
     var navController: NavController? = null
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    var userDao = MainActivity.dbRoom.userDao()
+    var userDao = MainActivity.dbRoom?.userDao()
 //    private lateinit var presenter: DBPresenter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +48,7 @@ class LoginFragment : Fragment(), IDatabase.View {
                 val preferencias  = requireActivity().
                 getSharedPreferences("userData", Context.MODE_PRIVATE)
                 lifecycleScope.launch {
-                    var userData = userDao.sessionUser(
+                    var userData = userDao?.sessionUser(
                         binding.etCorreo.text.toString(),
                         binding.etPassword.text.toString())
                     if(userData != null){

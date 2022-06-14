@@ -26,7 +26,7 @@ class NotesFragment : Fragment() {
     var navController: NavController? = null
     private var _binding: FragmentNotesBinding? = null
     private val binding get() = _binding!!
-    var categoryDao = MainActivity.dbRoom.categoryDao()
+    var categoryDao = MainActivity.dbRoom?.categoryDao()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +48,7 @@ class NotesFragment : Fragment() {
                 var nameCat = etNameCat.text.toString()
                 if(!nameCat.isNullOrBlank()){
                     lifecycleScope.launch {
-                    categoryDao.insertCategory(Category(0, nameCat))
+                    categoryDao?.insertCategory(Category(0, nameCat))
                     dialog.dismiss()
                     loadCategory()
                     }
@@ -63,8 +63,8 @@ class NotesFragment : Fragment() {
     fun loadCategory(){
         Handler().postDelayed(Runnable {
             lifecycleScope.launch {
-                var arrayCat = categoryDao.getAllCategoryName()
-                if (arrayCat.size > 0) {
+                var arrayCat = categoryDao?.getAllCategoryName()
+                if (arrayCat!!.size > 0) {
                     var adapter = ArrayAdapter<String>(
                         requireContext(),
                         android.R.layout.simple_list_item_1,

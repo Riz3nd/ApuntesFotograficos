@@ -3,6 +3,7 @@ package com.example.apuntesfotograficos.view
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentCategoryBinding
 import com.example.apuntesfotograficos.databinding.FragmentLoginBinding
 import com.example.apuntesfotograficos.interfaces.onItemClickListener
+import com.example.apuntesfotograficos.model.Note
 import com.example.apuntesfotograficos.utils.ImageAdapter
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -26,8 +28,9 @@ class CategoryFragment : Fragment() {
     var navController: NavController? = null
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
-    var noteDao = MainActivity.dbRoom.noteDao()
+    var noteDao = MainActivity.dbRoom?.noteDao()
     lateinit var nameCategory:String
+    var adapter:ImageAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +52,7 @@ class CategoryFragment : Fragment() {
         val preferencias  = requireActivity().
         getSharedPreferences("categoryNamePref", Context.MODE_PRIVATE)
         nameCategory = preferencias.getString("cateName", "") ?: "No disponible"
-        binding.tvMainTitle.text = nameCategory
+//        binding.tvMainTitle.text = nameCategory
         initRecycler()
         binding.tvMainTitle.text = nameCategory
         binding.btnBackCategory.setOnClickListener {
@@ -57,24 +60,39 @@ class CategoryFragment : Fragment() {
         }
     }
 
-    fun initRecycler(){
+    /*fun initRecycler(){
         Handler().postDelayed(Runnable {
             try {
                 lifecycleScope.launch {
-                    var notes = noteDao.getNoteByCategory(nameCategory)
-                    if(notes.size > 0){
+                    var notes = noteDao?.getNoteByCategory(nameCategory)
+                    if(notes!!.size > 0){
                         val adapter = ImageAdapter(notes, context)
                         binding.rvImages.layoutManager = LinearLayoutManager(context)
                         binding.rvImages.adapter = adapter
                         adapter.setOnItemListener(object : onItemClickListener {
-                            override fun onItemClick(position: Int) {
-//                                Toast.makeText(context,"$position", Toast.LENGTH_LONG).show()
-                                val bundle = bundleOf("src_image" to "${notes[position].note_src}")
-                                navController?.navigate(R.id.action_categoryFragment_to_imageFragment, bundle)
+                            override fun onItemClick(position: Int, id: Int) {
+//                                val bundle = bundleOf("src_image" to "${notes[position].note_src}")
+//                                navController?.navigate(R.id.action_categoryFragment_to_imageFragment, bundle)
+                                when(id){
+                                    R.id.img_card -> {
+                                        val bundle = bundleOf("src_image" to "${notes[position].note_src}")
+                                        navController?.navigate(R.id.action_categoryFragment_to_imageFragment, bundle)
+                                    }
+                                    R.id.icon_like -> {
+                                        lifecycleScope.launch { noteDao?.updateNoteLike(true, notes[position].note_name) }
+                                    }
+                                }
                             }
 
-                            override fun onItemLongClick(position: Int) {
-                                MainActivity.uiUtils.createDialog()
+                            override fun onItemLongClick(position: Int, id: Int) {
+                                when(id){
+                                    R.id.img_card -> {
+                                        MainActivity.uiUtils.createDialog()
+                                    }
+                                    R.id.icon_like -> {
+                                        lifecycleScope.launch { noteDao?.updateNoteLike(false, notes[position].note_name) }
+                                    }
+                                }
                             }
                         })
                     }
@@ -82,6 +100,47 @@ class CategoryFragment : Fragment() {
             }catch (e: Exception){e.printStackTrace()}
         },100)
 
+    }*/
+
+    fun initRecycler(){
+        Handler(Looper.getMainLooper()).postDelayed({
+            lifecycleScope.launch {
+                var notes = noteDao?.getAllNotes()?.reversed()
+                if(notes != null && notes !!.size > 0){
+                    showRecyler(notes)
+                }
+            }
+        },500)
+    }
+
+    fun showRecyler(notes: List<Note>){
+        adapter = ImageAdapter(notes, context)
+        binding.rvImages.layoutManager = LinearLayoutManager(context)
+        binding.rvImages.adapter = adapter
+        adapter!!.setOnItemListener(object : onItemClickListener{
+            override fun onItemClick(position: Int, id: Int) {
+                when(id){
+                    R.id.img_card -> {
+                        val bundle = bundleOf("src_image" to "${notes[position].note_src}")
+                        navController?.navigate(R.id.action_mainFragment_to_recentImageFragment, bundle)
+                    }
+                    R.id.icon_like -> {
+                        lifecycleScope.launch { noteDao?.updateNoteLike(true, notes[position].note_name) }
+                    }
+                }
+            }
+            override fun onItemLongClick(position: Int, id: Int) {
+                when(id){
+                    R.id.img_card -> {
+                        MainActivity.uiUtils.createDialog()
+                    }
+                    R.id.icon_like -> {
+                        lifecycleScope.launch {
+                            noteDao?.updateNoteLike(false, notes[position].note_name) }
+                    }
+                }
+            }
+        })
     }
 
     override fun onResume() {

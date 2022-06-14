@@ -28,9 +28,9 @@ class CategoryAdapter(notes:List<Note>, context: Context?) :
         init {
             textView = view.findViewById(R.id.tv_name_card)
             imgView = view.findViewById(R.id.img_card)
-            imgView.setOnClickListener { listener.onItemClick(adapterPosition) }
+            imgView.setOnClickListener { listener.onItemClick(adapterPosition, imgView.id) }
             imgView.setOnLongClickListener {
-                listener.onItemLongClick(adapterPosition)
+                listener.onItemLongClick(adapterPosition, imgView.id)
                 true
             }
         }

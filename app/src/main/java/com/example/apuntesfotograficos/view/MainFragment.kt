@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,8 +40,9 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     var name:String = ""
     var timeStamp:String = ""
     var cate:String = ""
-    var noteDao = MainActivity.dbRoom.noteDao()
-    var categoryDao = MainActivity.dbRoom.categoryDao()
+    var noteDao = MainActivity.dbRoom?.noteDao()
+    var categoryDao = MainActivity.dbRoom?.categoryDao()
+    var adapter:ImageAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,30 +79,54 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     }
 
     fun initRecycler(){
-        Handler().postDelayed(Runnable {
-            try {
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            lifecycleScope.launch {
+//                var notes = noteDao?.getAllNotes()?.reversed()
+//                if(notes != null && notes !!.size > 0){
+//                    showRecyler(notes)
+//                }
+//            }
+//        },500)
+        Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
+            override fun run() {
                 lifecycleScope.launch {
-                    var notes = noteDao.getAllNotes().reversed()
-                    if(notes.size > 0){
-                        val adapter = ImageAdapter(notes, context)
-                        binding.rvImages.layoutManager = LinearLayoutManager(context)
-                        binding.rvImages.adapter = adapter
-                        adapter.setOnItemListener(object : onItemClickListener{
-                            override fun onItemClick(position: Int) {
-//                                Toast.makeText(context,"$position",Toast.LENGTH_LONG).show()
-                                val bundle = bundleOf("src_image" to "${notes[position].note_src}")
-                                navController?.navigate(R.id.action_mainFragment_to_recentImageFragment, bundle)
-                            }
-
-                            override fun onItemLongClick(position: Int) {
-                                uiUtils.createDialog()
-                            }
-                        })
+                    var notes = noteDao?.getAllNotes()?.reversed()
+                    if(notes != null && notes !!.size > 0){
+                        showRecyler(notes)
                     }
                 }
-            }catch (e:Exception){e.printStackTrace()}
+            }
         },100)
+    }
 
+    fun showRecyler(notes: List<Note>){
+        adapter = ImageAdapter(notes, context)
+        binding.rvImages.layoutManager = LinearLayoutManager(context)
+        binding.rvImages.adapter = adapter
+        adapter!!.setOnItemListener(object : onItemClickListener{
+            override fun onItemClick(position: Int, id: Int) {
+                when(id){
+                    R.id.img_card -> {
+                        val bundle = bundleOf("src_image" to "${notes[position].note_src}")
+                        navController?.navigate(R.id.action_mainFragment_to_recentImageFragment, bundle)
+                    }
+                    R.id.icon_like -> {
+                        lifecycleScope.launch { noteDao?.updateNoteLike(true, notes[position].note_name) }
+                    }
+                }
+            }
+            override fun onItemLongClick(position: Int, id: Int) {
+                when(id){
+                    R.id.img_card -> {
+                        uiUtils.createDialog()
+                    }
+                    R.id.icon_like -> {
+                        lifecycleScope.launch {
+                            noteDao?.updateNoteLike(false, notes[position].note_name) }
+                    }
+                }
+            }
+        })
     }
 
     fun isSaveNote(){
@@ -109,9 +135,9 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
             if(it.contains("$name")){
                 if(!name.isNullOrBlank()){
                     lifecycleScope.launch {
-                        noteDao.insertNote(Note(0,name,
+                        noteDao?.insertNote(Note(0,name,
                             cate,"${timeStamp}", "n/a",
-                            false, "${URL_IMAGES}$it",0))
+                            false, false,"${URL_IMAGES}$it",0))
                     }
                     name = ""
                 }
@@ -128,7 +154,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
         when(view?.id){
             R.id.add_note -> {
                 lifecycleScope.launch {
-                    var listCategory = categoryDao.getAllCategory()
+                    var listCategory = categoryDao?.getAllCategory()
                     var dialog = uiUtils.createDialogNote(listCategory)
                     val btnDialogOK = dialog.findViewById<Button>(R.id.btn_dialog_ok)
                     val etNameNote = dialog.findViewById<EditText>(R.id.et_name_note)
@@ -153,8 +179,10 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                 override fun onClickDialog() { navController?.navigate(R.id.action_mainFragment_to_loginFragment) } }
                 )
                 var numApunte = dialog.findViewById<TextView>(R.id.tv_num_apunte)
+                var numLikes = dialog.findViewById<TextView>(R.id.tv_likes)
                 lifecycleScope.launch {
-                    numApunte.text = "${noteDao.getAllNotes().size}"
+                    numApunte.text = "${noteDao?.getAllNotes()?.size}"
+                    numLikes.text = "${noteDao?.getAllNotesLike(true)?.size}"
                 }
             }
         }

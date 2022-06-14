@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         lateinit var uiUtils:UIUtils
-        lateinit var dbRoom: NoteDB
+        var dbRoom: NoteDB? = null
     }
 
     override fun onBackPressed() {

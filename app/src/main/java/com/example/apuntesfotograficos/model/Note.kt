@@ -13,6 +13,7 @@ data class Note(
     val note_date: String,
     val note_content:String,
     val note_status:Boolean,
+    val note_like:Boolean,
     val note_src: String,
     val note_share:Int
 )

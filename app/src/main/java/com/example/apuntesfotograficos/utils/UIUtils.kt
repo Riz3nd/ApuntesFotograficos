@@ -30,13 +30,13 @@ class UIUtils(activity: Activity) {
         btnDialogCancel.setOnClickListener { dialog.dismiss() }
     }
 
-    fun createDialogNote(/*presenter: CameraPesenter, */listCategory: List<Category>):Dialog {
+    fun createDialogNote(listCategory: List<Category>?):Dialog {
         val dialog = Dialog(mActivity)
         dialog.setContentView(R.layout.dialog_create_note)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val spinner_category = dialog.findViewById<Spinner>(R.id.spinner_category)
         var mutableList = mutableListOf<String>()
-        listCategory.forEach{
+        listCategory?.forEach{
             mutableList.add(it.cate_name)
         }
         var array = mutableList.toTypedArray()

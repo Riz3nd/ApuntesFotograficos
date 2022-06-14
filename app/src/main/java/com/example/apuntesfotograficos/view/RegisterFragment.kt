@@ -25,7 +25,7 @@ class RegisterFragment : Fragment(), IDatabase.View {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
     private lateinit var presenter: DBPresenter
-    var userDao = MainActivity.dbRoom.userDao()
+    var userDao = MainActivity.dbRoom?.userDao()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +43,7 @@ class RegisterFragment : Fragment(), IDatabase.View {
             if(validateFields()){
 //                presenter.registerUser(user, context)
                 lifecycleScope.launch {
-                    userDao.insertUser(User(
+                    userDao?.insertUser(User(
                         0,
                         binding.etName.text.toString(),
                         binding.etEmail.text.toString(),
