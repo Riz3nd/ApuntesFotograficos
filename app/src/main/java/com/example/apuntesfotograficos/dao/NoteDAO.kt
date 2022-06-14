@@ -7,8 +7,8 @@ import com.example.apuntesfotograficos.model.Note
 interface NoteDAO {
     @Query("SELECT * FROM Note")
     suspend fun  getAllNotes():List<Note>
-    @Query("SELECT * FROM Note WHERE note_id = :id")
-    suspend fun getNoteById(id: Int):Note
+    @Query("SELECT * FROM Note WHERE note_category = :category")
+    suspend fun getNoteByCategory(category: String):List<Note>
     @Update
     suspend fun updateNote(note: Note)
     @Insert

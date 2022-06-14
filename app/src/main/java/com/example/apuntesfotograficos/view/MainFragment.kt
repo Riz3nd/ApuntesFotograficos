@@ -3,13 +3,12 @@ package com.example.apuntesfotograficos.view
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -28,6 +27,7 @@ import com.example.apuntesfotograficos.utils.CommonUtils
 import com.example.apuntesfotograficos.utils.Constans.Companion.URL_IMAGES
 import com.example.apuntesfotograficos.utils.ImageAdapter
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,7 +35,6 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     var navController: NavController? = null
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-//    var imagenes:MutableList<String>? = null
     lateinit var cameraPresenter:CameraPesenter
     var name:String = ""
     var timeStamp:String = ""
@@ -78,34 +77,43 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     }
 
     fun initRecycler(){
-        var imagenes = CommonUtils.getListImages()
-        var titles = CommonUtils.getListTitles()
-        if(!imagenes.isNullOrEmpty()){
-            val adapter = ImageAdapter(titles, imagenes, context)
-            binding.rvImages.layoutManager = LinearLayoutManager(context)
-            binding.rvImages.adapter = adapter
-            adapter.setOnItemListener(object : onItemClickListener{
-                override fun onItemClick(position: Int) {
-                    Toast.makeText(context,"$position",Toast.LENGTH_LONG).show()
-                }
+        Handler().postDelayed(Runnable {
+            try {
+                lifecycleScope.launch {
+                    var notes = noteDao.getAllNotes().reversed()
+                    if(notes.size > 0){
+                        val adapter = ImageAdapter(notes, context)
+                        binding.rvImages.layoutManager = LinearLayoutManager(context)
+                        binding.rvImages.adapter = adapter
+                        adapter.setOnItemListener(object : onItemClickListener{
+                            override fun onItemClick(position: Int) {
+//                                Toast.makeText(context,"$position",Toast.LENGTH_LONG).show()
+                                val bundle = bundleOf("src_image" to "${notes[position].note_src}")
+                                navController?.navigate(R.id.action_mainFragment_to_recentImageFragment, bundle)
+                            }
 
-                override fun onItemLongClick(position: Int) {
-                    uiUtils.createDialog()
+                            override fun onItemLongClick(position: Int) {
+                                uiUtils.createDialog()
+                            }
+                        })
+                    }
                 }
+            }catch (e:Exception){e.printStackTrace()}
+        },100)
 
-            })
-        }
     }
 
     fun isSaveNote(){
         var titles = CommonUtils.getListTitles()
         titles?.forEach {
             if(it.contains("$name")){
-                println("CONTIENEEEEEEEEEEEEEEEEE ----> $it")
-                lifecycleScope.launch {
-                    noteDao.insertNote(Note(0,name,
-                        cate,"${timeStamp}", "n/a",
-                        false, "${URL_IMAGES}$it",0))
+                if(!name.isNullOrBlank()){
+                    lifecycleScope.launch {
+                        noteDao.insertNote(Note(0,name,
+                            cate,"${timeStamp}", "n/a",
+                            false, "${URL_IMAGES}$it",0))
+                    }
+                    name = ""
                 }
                 return
             }
@@ -120,33 +128,35 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
         when(view?.id){
             R.id.add_note -> {
                 lifecycleScope.launch {
-//                    noteDao.insertNote(Note(0,"Nueva nota",1,"hoy",
-//                        "saludos gente",false,"as123da",0))
                     var listCategory = categoryDao.getAllCategory()
-                    var dialog = uiUtils.createDialogNote(/*cameraPresenter, */listCategory)
+                    var dialog = uiUtils.createDialogNote(listCategory)
                     val btnDialogOK = dialog.findViewById<Button>(R.id.btn_dialog_ok)
                     val etNameNote = dialog.findViewById<EditText>(R.id.et_name_note)
                     val spinner_category = dialog.findViewById<Spinner>(R.id.spinner_category)
                     btnDialogOK.setOnClickListener {
-                        timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                        name = "${etNameNote.text}"
-                        cate = "${spinner_category.selectedItem}"
-                        cameraPresenter.getImage("${name}_${cate}", timeStamp)
-//                        lifecycleScope.launch {
-//                            if(!currentPhotoPath.isNullOrBlank())
-//                                noteDao.insertNote(Note(0,"${etNameNote.text}",
-//                                    "${spinner_category.selectedItem}","${timeStamp}", "saludos gente",
-//                                    false,"${currentPhotoPath}",0))
-//                        }
-                        dialog.dismiss()
+                        if(!etNameNote.text.isNullOrBlank()){
+                            timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                            name = "${etNameNote.text}"
+                            cate = "${spinner_category.selectedItem}"
+                            cameraPresenter.getImage("${name}_${cate}", timeStamp)
+                            dialog.dismiss()
+                        }else{
+                            Toast.makeText(context,"Debe ingresar un nombre", Toast.LENGTH_LONG).show()
+                        }
                     }
-
                 }
             }
             R.id.card_apuntes -> navController?.navigate(R.id.action_mainFragment_to_notesFragment)
             R.id.card_grupos -> uiUtils.createDialog()
-            R.id.btn_profile -> { uiUtils.profileDialog(object : onItemClickListener.onClickDialog{
-                override fun onClickDialog() { navController?.navigate(R.id.action_mainFragment_to_loginFragment) } }) }
+            R.id.btn_profile -> {
+                var dialog = uiUtils.profileDialog(object : onItemClickListener.onClickDialog{
+                override fun onClickDialog() { navController?.navigate(R.id.action_mainFragment_to_loginFragment) } }
+                )
+                var numApunte = dialog.findViewById<TextView>(R.id.tv_num_apunte)
+                lifecycleScope.launch {
+                    numApunte.text = "${noteDao.getAllNotes().size}"
+                }
+            }
         }
     }
 

@@ -56,7 +56,7 @@ class UIUtils(activity: Activity) {
         return dialog
     }
 
-    fun profileDialog(listener: onItemClickListener.onClickDialog) {
+    fun profileDialog(listener: onItemClickListener.onClickDialog):Dialog {
         val dialog = Dialog(mActivity)
         dialog.setContentView(R.layout.profile_dialog)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -75,6 +75,7 @@ class UIUtils(activity: Activity) {
             dialog.dismiss()
             listener.onClickDialog()
         }
+        return dialog
     }
 
 }

@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:backgroundTint="@color/bg_main"
+<androidx.cardview.widget.CardView xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="10dp"
     android:layout_marginVertical="5dp"
     android:layout_marginHorizontal="5dp"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="130dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
-        android:orientation="horizontal"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.cardview.widget.CardView
-            android:layout_weight="0.5"
+            android:id="@+id/main_card"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
             android:layout_gravity="end"
             app:cardCornerRadius="10dp"
-            android:layout_width="30dp"
-            android:layout_height="match_parent">
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
             <ImageView
                 android:id="@+id/img_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </androidx.cardview.widget.CardView>
+
         <TextView
-            android:layout_weight="1"
             android:id="@+id/tv_name_card"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            style="@style/subtitle_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/main_card"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

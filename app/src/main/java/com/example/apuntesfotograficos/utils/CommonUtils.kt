@@ -18,7 +18,6 @@ class CommonUtils {
             if(listaImagenes.size > 0)
                 listaImagenes.removeAt(0)
             listaImagenes.reverse()
-//            println("TAMAÑO -----> ${listaImagenes?.size}")
             return listaImagenes
         }
 
@@ -26,21 +25,13 @@ class CommonUtils {
             var directory = File(Constans.URL_IMAGES)
             var listaTitulos: MutableList<String> = listOf<String>().toMutableList()
             var getTitulos: MutableList<String> = listOf<String>().toMutableList()
-
             directory.walk().forEach {
                 if (it != null){
                     listaTitulos.add("${it.toString().replace(Constans.URL_IMAGES,"")}")
                 }
             }
-//            if(listaTitulos.size > 0)
-//                listaTitulos.removeAt(0)
-            listaTitulos.reverse()
-
             listaTitulos.forEach {
-//                getTitulos = it.toString().split("*").toMutableList()
-                println("TITULOS  -  $it")
             }
-
             return listaTitulos
         }
 

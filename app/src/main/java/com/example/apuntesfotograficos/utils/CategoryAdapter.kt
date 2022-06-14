@@ -13,8 +13,8 @@ import com.example.apuntesfotograficos.interfaces.onItemClickListener
 import com.example.apuntesfotograficos.model.Note
 import com.squareup.picasso.Picasso
 
-class ImageAdapter(notes:List<Note>, context: Context?) :
-    RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
+class CategoryAdapter(notes:List<Note>, context: Context?) :
+    RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
     lateinit var mListener: onItemClickListener
     var mNote: List<Note> = notes
 //    var title: MutableList<String>? = titles

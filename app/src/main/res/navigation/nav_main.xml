@@ -41,6 +41,9 @@
             android:id="@+id/action_mainFragment_to_notesFragment"
             app:destination="@id/notesFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_mainFragment_to_recentImageFragment"
+            app:destination="@id/recentImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/notesFragment"
@@ -51,6 +54,9 @@
             android:id="@+id/action_notesFragment_to_mainFragment"
             app:destination="@id/mainFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_notesFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -60,5 +66,35 @@
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.apuntesfotograficos.view.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" >
+        <action
+            android:id="@+id/action_categoryFragment_to_notesFragment"
+            app:destination="@id/notesFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_imageFragment"
+            app:destination="@id/imageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageFragment"
+        android:name="com.example.apuntesfotograficos.view.ImageFragment"
+        android:label="fragment_image"
+        tools:layout="@layout/fragment_image" >
+        <action
+            android:id="@+id/action_imageFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recentImageFragment"
+        android:name="com.example.apuntesfotograficos.view.RecentImageFragment"
+        android:label="recent_fragment_image"
+        tools:layout="@layout/recent_fragment_image" >
+        <action
+            android:id="@+id/action_recentImageFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

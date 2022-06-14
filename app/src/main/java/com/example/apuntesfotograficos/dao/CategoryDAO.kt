@@ -6,8 +6,8 @@ import com.example.apuntesfotograficos.model.Category
 interface CategoryDAO {
     @Query("SELECT * FROM Category")
     suspend fun  getAllCategory():List<Category>
-    @Query("SELECT * FROM Category WHERE cate_id = :id")
-    suspend fun getCategoryById(id: Int): Category
+    @Query("SELECT cate_name FROM Category")
+    suspend fun  getAllCategoryName():Array<String>
     @Update
     suspend fun updateCategory(Category: Category)
     @Insert
