@@ -8,6 +8,7 @@ import java.util.*
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val note_id:Int,
+    val note_user:Int,
     val note_name:String,
     val note_category:String,
     val note_date: String,

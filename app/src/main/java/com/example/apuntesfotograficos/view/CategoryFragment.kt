@@ -105,7 +105,8 @@ class CategoryFragment : Fragment() {
     fun initRecycler(){
         Handler(Looper.getMainLooper()).postDelayed({
             lifecycleScope.launch {
-                var notes = noteDao?.getAllNotes()?.reversed()
+//                var notes = noteDao?.getAllNotes()?.reversed()
+                var notes = noteDao?.getNoteByCategory(nameCategory, MainFragment.id_user)?.reversed()
                 if(notes != null && notes !!.size > 0){
                     showRecyler(notes)
                 }

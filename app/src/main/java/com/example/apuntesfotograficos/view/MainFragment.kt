@@ -58,6 +58,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         val preferencias  = requireActivity().
         getSharedPreferences("userData", Context.MODE_PRIVATE)
+        id_user = preferencias.getInt("id", 0)
         binding.tvMainTitle.text = "${getString(R.string.main_title)} ${preferencias.getString("name", "")}"
         initRecycler()
         binding.cardApuntes.setOnClickListener(this)
@@ -79,15 +80,20 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     }
 
     fun initRecycler(){
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            lifecycleScope.launch {
-//                var notes = noteDao?.getAllNotes()?.reversed()
-//                if(notes != null && notes !!.size > 0){
-//                    showRecyler(notes)
-//                }
-//            }
-//        },500)
-        Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
+        Handler(Looper.getMainLooper()).postDelayed({
+            try {
+                lifecycleScope.launch {
+                    var notes = noteDao?.getAllNotes(id_user)
+                    if(notes != null && notes !!.size > 0){
+                        notes = notes.reversed()
+                        showRecyler(notes)
+                    } else
+                        initRecycler()
+                }
+            }catch (e: Exception){e.printStackTrace()}
+
+        },200)
+/*        Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
             override fun run() {
                 lifecycleScope.launch {
                     var notes = noteDao?.getAllNotes()?.reversed()
@@ -96,7 +102,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                     }
                 }
             }
-        },100)
+        },100)*/
     }
 
     fun showRecyler(notes: List<Note>){
@@ -122,7 +128,9 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                     }
                     R.id.icon_like -> {
                         lifecycleScope.launch {
-                            noteDao?.updateNoteLike(false, notes[position].note_name) }
+                            noteDao?.updateNoteLike(false, notes[position].note_name)
+                            initRecycler()
+                        }
                     }
                 }
             }
@@ -131,19 +139,20 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     fun isSaveNote(){
         var titles = CommonUtils.getListTitles()
-        titles?.forEach {
-            if(it.contains("$name")){
-                if(!name.isNullOrBlank()){
-                    lifecycleScope.launch {
-                        noteDao?.insertNote(Note(0,name,
-                            cate,"${timeStamp}", "n/a",
-                            false, false,"${URL_IMAGES}$it",0))
+        Handler(Looper.getMainLooper()).postDelayed({
+            titles?.forEach {
+                if(it.contains("$name")){
+                    if(!name.isNullOrBlank()){
+                        lifecycleScope.launch {
+                            noteDao?.insertNote(Note(0, id_user, name,
+                                cate,"${timeStamp}", "n/a",
+                                false, false,"${URL_IMAGES}$it",0))
+                        }
+                        name = ""
                     }
-                    name = ""
                 }
-                return
             }
-        }
+        },500)
     }
 
     override fun getCamera():Activity {
@@ -154,7 +163,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
         when(view?.id){
             R.id.add_note -> {
                 lifecycleScope.launch {
-                    var listCategory = categoryDao?.getAllCategory()
+                    var listCategory = categoryDao?.getAllCategory(id_user)
                     var dialog = uiUtils.createDialogNote(listCategory)
                     val btnDialogOK = dialog.findViewById<Button>(R.id.btn_dialog_ok)
                     val etNameNote = dialog.findViewById<EditText>(R.id.et_name_note)
@@ -181,11 +190,15 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                 var numApunte = dialog.findViewById<TextView>(R.id.tv_num_apunte)
                 var numLikes = dialog.findViewById<TextView>(R.id.tv_likes)
                 lifecycleScope.launch {
-                    numApunte.text = "${noteDao?.getAllNotes()?.size}"
+                    numApunte.text = "${noteDao?.getAllNotes(id_user)?.size}"
                     numLikes.text = "${noteDao?.getAllNotesLike(true)?.size}"
                 }
             }
         }
+    }
+
+    companion object{
+        var id_user = 0
     }
 
 }

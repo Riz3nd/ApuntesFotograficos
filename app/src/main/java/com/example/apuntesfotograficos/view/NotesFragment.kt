@@ -20,6 +20,7 @@ import com.example.apuntesfotograficos.MainActivity.Companion.uiUtils
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentNotesBinding
 import com.example.apuntesfotograficos.model.Category
+import com.example.apuntesfotograficos.view.MainFragment.Companion.id_user
 import kotlinx.coroutines.launch
 
 class NotesFragment : Fragment() {
@@ -48,7 +49,7 @@ class NotesFragment : Fragment() {
                 var nameCat = etNameCat.text.toString()
                 if(!nameCat.isNullOrBlank()){
                     lifecycleScope.launch {
-                    categoryDao?.insertCategory(Category(0, nameCat))
+                    categoryDao?.insertCategory(Category(0, id_user, nameCat))
                     dialog.dismiss()
                     loadCategory()
                     }
@@ -63,7 +64,7 @@ class NotesFragment : Fragment() {
     fun loadCategory(){
         Handler().postDelayed(Runnable {
             lifecycleScope.launch {
-                var arrayCat = categoryDao?.getAllCategoryName()
+                var arrayCat = categoryDao?.getAllCategoryName(id_user)
                 if (arrayCat!!.size > 0) {
                     var adapter = ArrayAdapter<String>(
                         requireContext(),

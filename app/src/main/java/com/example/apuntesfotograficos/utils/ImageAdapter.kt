@@ -1,17 +1,27 @@
 package com.example.apuntesfotograficos.utils
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.interfaces.onItemClickListener
 import com.example.apuntesfotograficos.model.Note
-import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.URL
+
 
 class ImageAdapter(notes:List<Note>?, context: Context?) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
@@ -33,8 +43,8 @@ class ImageAdapter(notes:List<Note>?, context: Context?) :
                 favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart_ok))
                 listener.onItemClick(adapterPosition, favImg.id) }
             favImg.setOnLongClickListener {
-                listener.onItemLongClick(adapterPosition, favImg.id)
                 favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart))
+                listener.onItemLongClick(adapterPosition, favImg.id)
                 true
             }
             imgView.setOnClickListener { listener.onItemClick(adapterPosition, imgView.id) }
@@ -56,14 +66,30 @@ class ImageAdapter(notes:List<Note>?, context: Context?) :
             viewHolder.imgView.setImageResource(R.drawable.note_view);
         }else{
             if(!mNote?.get(position)?.note_name.isNullOrBlank()){
-//                var likeStatus = mNote?.get(position)?.note_like
-                Picasso.get()
+                Glide
+                    .with(context!!)
                     .load("file://${mNote?.get(position)?.note_src}")
-                    .error(R.drawable.share)
+                    .centerCrop()
                     .into(viewHolder.imgView);
                 viewHolder.textView.text = mNote?.get(position)?.note_name
                 if (mNote?.get(position)?.note_like!!)
                     viewHolder.favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart_ok))
+                else
+                    viewHolder.favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart))
+            }
+        }
+    }
+
+    private var image: Bitmap? = null
+    private fun getBitmapFromURL(src: String?) {
+        CoroutineScope(Job() + Dispatchers.IO).launch {
+            try {
+//                val url = URL(src)
+                val bitmap = MediaStore.Images.Media.getBitmap(context?.getContentResolver(), Uri.parse(src))
+                image = Bitmap.createScaledBitmap(bitmap, 100, 100, true)
+//                val bitMap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            } catch (e: IOException) {
+                // Log exception
             }
         }
     }
