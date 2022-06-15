@@ -47,6 +47,7 @@
             <EditText
                 android:id="@+id/et_name_note"
                 android:layout_gravity="center"
+                android:inputType="textCapSentences"
                 style="@style/et_style_dialog"
                 android:hint="Nombre apunte"
                 android:textAlignment="center"

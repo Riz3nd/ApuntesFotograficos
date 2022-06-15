@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_main"
-    tools:context=".view.NotesFragment">
+    tools:context=".view.ShareFragment">
     <LinearLayout
         android:orientation="vertical"
         android:layout_marginHorizontal="30dp"
@@ -27,7 +27,7 @@
                 android:id="@+id/tv_main_title"
                 style="@style/title_style"
                 android:layout_weight="2"
-                android:text="@string/notes"
+                android:text="@string/share_notes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <ListView
-                    android:id="@+id/lv_category"
+                    android:id="@+id/lv_share"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 

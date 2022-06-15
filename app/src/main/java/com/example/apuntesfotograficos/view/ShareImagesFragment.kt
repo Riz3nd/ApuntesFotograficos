@@ -18,15 +18,17 @@ import com.example.apuntesfotograficos.MainActivity
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentCategoryBinding
 import com.example.apuntesfotograficos.databinding.FragmentLoginBinding
+import com.example.apuntesfotograficos.databinding.FragmentShareImagesBinding
 import com.example.apuntesfotograficos.interfaces.onItemClickListener
 import com.example.apuntesfotograficos.model.Note
 import com.example.apuntesfotograficos.utils.ImageAdapter
+import com.example.apuntesfotograficos.view.ShareFragment.Companion.share_cate
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class CategoryFragment : Fragment() {
+class ShareImagesFragment : Fragment() {
     var navController: NavController? = null
-    private var _binding: FragmentCategoryBinding? = null
+    private var _binding: FragmentShareImagesBinding? = null
     private val binding get() = _binding!!
     var noteDao = MainActivity.dbRoom?.noteDao()
     lateinit var nameCategory:String
@@ -43,68 +45,24 @@ class CategoryFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         navController = findNavController()
-        _binding = FragmentCategoryBinding.inflate(inflater, container, false)
+        _binding = FragmentShareImagesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val preferencias  = requireActivity().
-        getSharedPreferences("categoryNamePref", Context.MODE_PRIVATE)
-        nameCategory = preferencias.getString("cateName", "") ?: "No disponible"
+        nameCategory = share_cate
 //        binding.tvMainTitle.text = nameCategory
         initRecycler()
         binding.tvMainTitle.text = nameCategory
         binding.btnBackCategory.setOnClickListener {
-            navController?.navigate(R.id.action_categoryFragment_to_notesFragment)
+            navController?.navigate(R.id.action_shareImagesFragment_to_shareFragment)
         }
     }
 
-    /*fun initRecycler(){
-        Handler().postDelayed(Runnable {
-            try {
-                lifecycleScope.launch {
-                    var notes = noteDao?.getNoteByCategory(nameCategory)
-                    if(notes!!.size > 0){
-                        val adapter = ImageAdapter(notes, context)
-                        binding.rvImages.layoutManager = LinearLayoutManager(context)
-                        binding.rvImages.adapter = adapter
-                        adapter.setOnItemListener(object : onItemClickListener {
-                            override fun onItemClick(position: Int, id: Int) {
-//                                val bundle = bundleOf("src_image" to "${notes[position].note_src}")
-//                                navController?.navigate(R.id.action_categoryFragment_to_imageFragment, bundle)
-                                when(id){
-                                    R.id.img_card -> {
-                                        val bundle = bundleOf("src_image" to "${notes[position].note_src}")
-                                        navController?.navigate(R.id.action_categoryFragment_to_imageFragment, bundle)
-                                    }
-                                    R.id.icon_like -> {
-                                        lifecycleScope.launch { noteDao?.updateNoteLike(true, notes[position].note_name) }
-                                    }
-                                }
-                            }
-
-                            override fun onItemLongClick(position: Int, id: Int) {
-                                when(id){
-                                    R.id.img_card -> {
-                                        MainActivity.uiUtils.createDialog()
-                                    }
-                                    R.id.icon_like -> {
-                                        lifecycleScope.launch { noteDao?.updateNoteLike(false, notes[position].note_name) }
-                                    }
-                                }
-                            }
-                        })
-                    }
-                }
-            }catch (e: Exception){e.printStackTrace()}
-        },100)
-
-    }*/
-
     fun initRecycler(){
         lifecycleScope.launch {
-            var notes = noteDao?.getNoteByCategory(nameCategory, MainFragment.id_user)?.reversed()
+            var notes = noteDao?.getNoteByCategoryName(nameCategory)?.reversed()
             if(notes != null && notes !!.size > 0){
                 showRecyler(notes)
             }

@@ -20,14 +20,41 @@ class UIUtils(activity: Activity) {
 
     }
 
-    fun createDialog() {
+    fun createDialog(cat_title: String):Dialog {
         val dialog = Dialog(mActivity)
         dialog.setContentView(R.layout.dialog)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val btnDialogCancel = dialog.findViewById<Button>(R.id.btn_dialog_cancel)
+        val title = dialog.findViewById<TextView>(R.id.title_dialog)
+        title.text = "$cat_title"
         dialog.create()
         dialog.show()
-        btnDialogCancel.setOnClickListener { dialog.dismiss() }
+        return dialog
+    }
+
+    fun createDialogCateShare(/*listCategory: List<Category>?*/):Dialog {
+        val dialog = Dialog(mActivity)
+        dialog.setContentView(R.layout.dialog_share_note)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        val spinner_category = dialog.findViewById<Spinner>(R.id.spinner_category)
+//        var mutableList = mutableListOf<String>()
+//        listCategory?.forEach{
+//            mutableList.add(it.cate_name)
+//        }
+//        var array = mutableList.toTypedArray()
+//        val adaterSpinner = ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, array)
+//        spinner_category.adapter = adaterSpinner
+        dialog.create()
+        dialog.show()
+        return dialog
+    }
+
+    fun createDialogEditCate():Dialog {
+        val dialog = Dialog(mActivity)
+        dialog.setContentView(R.layout.dialog_share_note)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.create()
+        dialog.show()
+        return dialog
     }
 
     fun createDialogNote(listCategory: List<Category>?):Dialog {

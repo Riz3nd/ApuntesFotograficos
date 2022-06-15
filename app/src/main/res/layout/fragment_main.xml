@@ -69,7 +69,7 @@
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"/>
             <androidx.cardview.widget.CardView
-                android:id="@+id/card_grupos"
+                android:id="@+id/card_share_notes"
                 android:layout_weight="1"
                 app:cardCornerRadius="10dp"
                 android:layout_width="129dp"
@@ -82,7 +82,7 @@
                     <TextView
                         style="@style/subtitle_style"
                         android:textStyle="bold"
-                        android:text="@string/groups"
+                        android:text="@string/share_notes"
                         android:layout_gravity="center"
                         android:textAlignment="center"
                         android:layout_width="wrap_content"

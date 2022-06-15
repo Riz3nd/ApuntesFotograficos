@@ -15,14 +15,16 @@ import com.example.apuntesfotograficos.MainActivity
 import com.example.apuntesfotograficos.MainActivity.Companion.uiUtils
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.databinding.FragmentNotesBinding
+import com.example.apuntesfotograficos.databinding.FragmentShareBinding
 import com.example.apuntesfotograficos.model.Category
 import com.example.apuntesfotograficos.model.Share
 import com.example.apuntesfotograficos.view.MainFragment.Companion.id_user
+import com.example.apuntesfotograficos.view.MainFragment.Companion.user_email
 import kotlinx.coroutines.launch
 
-class NotesFragment : Fragment() {
+class ShareFragment : Fragment() {
     var navController: NavController? = null
-    private var _binding: FragmentNotesBinding? = null
+    private var _binding: FragmentShareBinding? = null
     private val binding get() = _binding!!
     var categoryDao = MainActivity.dbRoom?.categoryDao()
     var shareDao = MainActivity.dbRoom?.shareDao()
@@ -33,13 +35,13 @@ class NotesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         navController = findNavController()
-        _binding = FragmentNotesBinding.inflate(inflater, container, false)
+        _binding = FragmentShareBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.btnBackNotes.setOnClickListener { navController?.navigate(R.id.action_notesFragment_to_mainFragment) }
+        binding.btnBackNotes.setOnClickListener { navController?.navigate(R.id.action_shareFragment_to_mainFragment) }
         binding.btnAddCategory.setOnClickListener {
             var dialog = uiUtils.createDialogCategory()
             val btnDialogOk = dialog.findViewById<Button>(R.id.btn_dialog_ok)
@@ -63,24 +65,25 @@ class NotesFragment : Fragment() {
     fun loadCategory(){
         Handler().postDelayed(Runnable {
             lifecycleScope.launch {
-                var arrayCat = categoryDao?.getAllCategoryName(id_user)
+                var arrayCat = shareDao?.getShareAllCategory(user_email)
                 if (arrayCat!!.size > 0) {
                     var adapter = ArrayAdapter<String>(
                         requireContext(),
                         android.R.layout.simple_list_item_1,
                         arrayCat
                     )
-                    binding.lvCategory.adapter = adapter
-                    binding.lvCategory.setOnItemClickListener { adapterView, view, i, l ->
+                    binding.lvShare.adapter = adapter
+                    binding.lvShare.setOnItemClickListener { adapterView, view, i, l ->
 //                        val bundle = bundleOf("category_name" to "${arrayCat[i]}")
-                        val preferencias  = requireActivity().
-                            getSharedPreferences("categoryNamePref", Context.MODE_PRIVATE)
-                        val editor = preferencias.edit()
-                        editor.putString("cateName", "${arrayCat[i]}")
-                        editor.commit()
-                        navController?.navigate(R.id.action_notesFragment_to_categoryFragment)
+//                        val preferencias  = requireActivity().
+//                            getSharedPreferences("categoryNamePref", Context.MODE_PRIVATE)
+//                        val editor = preferencias.edit()
+//                        editor.putString("cateName", "${arrayCat[i]}")
+//                        editor.commit()
+                        share_cate = "${arrayCat[i]}"
+                        navController?.navigate(R.id.action_shareFragment_to_shareImagesFragment)
                     }
-                    binding.lvCategory.setOnItemLongClickListener { adapterView, view, i, l ->
+                    binding.lvShare.setOnItemLongClickListener { adapterView, view, i, l ->
                         var mainDialog = uiUtils.createDialog("${arrayCat[i]}")
                         val btnDialogCancel = mainDialog.findViewById<Button>(R.id.btn_dialog_cancel)
                         val btnDialogShare = mainDialog.findViewById<LinearLayout>(R.id.btn_share)
@@ -143,6 +146,10 @@ class NotesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object{
+        var share_cate = ""
     }
 
 }

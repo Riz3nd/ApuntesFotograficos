@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_mainFragment_to_recentImageFragment"
             app:destination="@id/recentImageFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_shareFragment"
+            app:destination="@id/shareFragment" />
     </fragment>
     <fragment
         android:id="@+id/notesFragment"
@@ -96,5 +99,26 @@
         <action
             android:id="@+id/action_recentImageFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shareFragment"
+        android:name="com.example.apuntesfotograficos.view.ShareFragment"
+        android:label="fragment_share"
+        tools:layout="@layout/fragment_share" >
+        <action
+            android:id="@+id/action_shareFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_shareFragment_to_shareImagesFragment"
+            app:destination="@id/shareImagesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shareImagesFragment"
+        android:name="com.example.apuntesfotograficos.view.ShareImagesFragment"
+        android:label="fragment_share_images"
+        tools:layout="@layout/fragment_share_images" >
+        <action
+            android:id="@+id/action_shareImagesFragment_to_shareFragment"
+            app:destination="@id/shareFragment" />
     </fragment>
 </navigation>

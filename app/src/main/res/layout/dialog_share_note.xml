@@ -5,7 +5,7 @@
     android:layout_gravity="center"
     android:backgroundTint="#FEFDF9"
     android:layout_width="292dp"
-    android:layout_height="336dp">
+    android:layout_height="192dp">
     <LinearLayout
         android:orientation="vertical"
         android:layout_marginHorizontal="30dp"
@@ -13,64 +13,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:id="@+id/title_dialog"
+            android:id="@+id/et_title"
             android:layout_weight="0.1"
-            android:text="Calculo"
+            android:text="@string/share"
             style="@style/title_style"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <LinearLayout
-            android:id="@+id/btn_share"
             android:layout_weight="1"
-            android:layout_marginHorizontal="30dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
-                style="@style/icon_style"
-                android:src="@drawable/share"
-                android:layout_gravity="center" />
-            <TextView
-                android:layout_weight="1"
-                android:text="@string/share"
-                style="@style/subtitle_style"
+            <EditText
+                android:id="@+id/et_share"
                 android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:inputType="textCapSentences"
+                style="@style/et_style_dialog"
+                android:hint="ejemplo@ejemplo.com"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/btn_edit"
+<!--        <LinearLayout
             android:layout_weight="1"
-            android:layout_marginHorizontal="30dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                style="@style/icon_style"
-                android:src="@drawable/pencil"
-                android:layout_gravity="center" />
-            <TextView
-                android:layout_weight="1"
-                android:text="@string/modify"
-                style="@style/subtitle_style"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/btn_delete"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="30dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                style="@style/icon_style"
                 android:src="@drawable/trash"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <TextView
                 android:layout_weight="1"
                 android:text="@string/delete"
@@ -79,11 +54,11 @@
                 android:gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-        </LinearLayout>
+        </LinearLayout>-->
         <Button
-            android:id="@+id/btn_dialog_cancel"
+            android:id="@+id/btn_dialog_ok"
             style="@style/button_style"
             android:layout_gravity="center_horizontal"
-            android:text="@string/cancel" />
+            android:text="@string/accept" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -16,10 +16,10 @@
     <string name="phone">Teléfono</string>
     <string name="main_title">Bienvenido,</string>
     <string name="notes">Apuntes</string>
-    <string name="groups">Grupos e invitados</string>
+    <string name="share_notes">Apuntes Compartidos</string>
     <string name="category">Categorías</string>
     <string name="add_category">Añadir categoría</string>
-    <string name="share">Compartir categorías</string>
+    <string name="share">Compartir</string>
     <string name="last_notes">Entradas recientes</string>
     <string name="delete">Eliminar</string>
     <string name="modify">Modificar</string>
@@ -27,6 +27,7 @@
     <string name="create_note">Crear Apunte</string>
     <string name="create_category">Crear Categoría</string>
     <string name="accept">Aceptar</string>
+    <string name="ok">OK</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

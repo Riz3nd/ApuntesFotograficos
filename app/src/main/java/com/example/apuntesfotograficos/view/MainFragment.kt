@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.apuntesfotograficos.MainActivity
 import com.example.apuntesfotograficos.MainActivity.Companion.uiUtils
 import com.example.apuntesfotograficos.R
@@ -28,7 +29,6 @@ import com.example.apuntesfotograficos.utils.CommonUtils
 import com.example.apuntesfotograficos.utils.Constans.Companion.URL_IMAGES
 import com.example.apuntesfotograficos.utils.ImageAdapter
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -43,6 +43,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     var noteDao = MainActivity.dbRoom?.noteDao()
     var categoryDao = MainActivity.dbRoom?.categoryDao()
     var adapter:ImageAdapter? = null
+    lateinit var rv_recent_notes:RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,10 +60,13 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
         val preferencias  = requireActivity().
         getSharedPreferences("userData", Context.MODE_PRIVATE)
         id_user = preferencias.getInt("id", 0)
+        user_email = preferencias.getString("email", "").toString()
         binding.tvMainTitle.text = "${getString(R.string.main_title)} ${preferencias.getString("name", "")}"
+        rv_recent_notes = binding.rvImages
+        rv_recent_notes.layoutManager = LinearLayoutManager(context)
         initRecycler()
         binding.cardApuntes.setOnClickListener(this)
-        binding.cardGrupos.setOnClickListener(this)
+        binding.cardShareNotes.setOnClickListener(this)
         binding.addNote.setOnClickListener(this)
         binding.btnProfile.setOnClickListener(this)
 
@@ -70,7 +74,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        initRecycler()
+//        initRecycler()
         isSaveNote()
     }
 
@@ -80,61 +84,57 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     }
 
     fun initRecycler(){
-        Handler(Looper.getMainLooper()).postDelayed({
-            try {
-                lifecycleScope.launch {
-                    var notes = noteDao?.getAllNotes(id_user)
-                    if(notes != null && notes !!.size > 0){
-                        notes = notes.reversed()
-                        showRecyler(notes)
-                    } else
-                        initRecycler()
-                }
-            }catch (e: Exception){e.printStackTrace()}
-
-        },200)
-/*        Handler(Looper.getMainLooper()).postDelayed(object : Runnable {
-            override fun run() {
-                lifecycleScope.launch {
-                    var notes = noteDao?.getAllNotes()?.reversed()
-                    if(notes != null && notes !!.size > 0){
-                        showRecyler(notes)
-                    }
-                }
-            }
-        },100)*/
+        lifecycleScope.launch {
+            var notes = noteDao?.getAllNotes(id_user)
+            if(notes != null && notes.size > 0){
+                notes = notes.reversed()
+                showRecyler(notes)
+            } else
+                initRecycler()
+        }
     }
 
     fun showRecyler(notes: List<Note>){
         adapter = ImageAdapter(notes, context)
-        binding.rvImages.layoutManager = LinearLayoutManager(context)
-        binding.rvImages.adapter = adapter
-        adapter!!.setOnItemListener(object : onItemClickListener{
-            override fun onItemClick(position: Int, id: Int) {
-                when(id){
-                    R.id.img_card -> {
-                        val bundle = bundleOf("src_image" to "${notes[position].note_src}")
-                        navController?.navigate(R.id.action_mainFragment_to_recentImageFragment, bundle)
-                    }
-                    R.id.icon_like -> {
-                        lifecycleScope.launch { noteDao?.updateNoteLike(true, notes[position].note_name) }
-                    }
-                }
-            }
-            override fun onItemLongClick(position: Int, id: Int) {
-                when(id){
-                    R.id.img_card -> {
-                        uiUtils.createDialog()
-                    }
-                    R.id.icon_like -> {
-                        lifecycleScope.launch {
-                            noteDao?.updateNoteLike(false, notes[position].note_name)
-                            initRecycler()
+        if (adapter != null) {
+            rv_recent_notes.adapter = adapter
+            adapter!!.setOnItemListener(object : onItemClickListener {
+                override fun onItemClick(position: Int, id: Int) {
+                    when (id) {
+                        R.id.img_card -> {
+                            val bundle = bundleOf("src_image" to "${notes[position].note_src}")
+                            navController?.navigate(
+                                R.id.action_mainFragment_to_recentImageFragment,
+                                bundle
+                            )
+                        }
+                        R.id.icon_like -> {
+                            lifecycleScope.launch {
+                                noteDao?.updateNoteLike(
+                                    true,
+                                    notes[position].note_name
+                                )
+                                initRecycler()
+                            }
                         }
                     }
                 }
-            }
-        })
+
+                override fun onItemLongClick(position: Int, id: Int) {
+                    when (id) {
+                        R.id.img_card -> {
+//                            uiUtils.createDialog()
+                        }
+                        R.id.icon_like -> {
+                            lifecycleScope.launch {
+                                noteDao?.updateNoteLike(false, notes[position].note_name)
+                                initRecycler()
+                            }
+                        }
+                    }
+                }
+            })
+        }
     }
 
     fun isSaveNote(){
@@ -147,6 +147,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                             noteDao?.insertNote(Note(0, id_user, name,
                                 cate,"${timeStamp}", "n/a",
                                 false, false,"${URL_IMAGES}$it",0))
+                            initRecycler()
                         }
                         name = ""
                     }
@@ -182,16 +183,18 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                 }
             }
             R.id.card_apuntes -> navController?.navigate(R.id.action_mainFragment_to_notesFragment)
-            R.id.card_grupos -> uiUtils.createDialog()
+            R.id.card_share_notes -> navController?.navigate(R.id.action_mainFragment_to_shareFragment)
             R.id.btn_profile -> {
                 var dialog = uiUtils.profileDialog(object : onItemClickListener.onClickDialog{
                 override fun onClickDialog() { navController?.navigate(R.id.action_mainFragment_to_loginFragment) } }
                 )
                 var numApunte = dialog.findViewById<TextView>(R.id.tv_num_apunte)
                 var numLikes = dialog.findViewById<TextView>(R.id.tv_likes)
+                var numCate = dialog.findViewById<TextView>(R.id.tv_num_cate)
                 lifecycleScope.launch {
                     numApunte.text = "${noteDao?.getAllNotes(id_user)?.size}"
-                    numLikes.text = "${noteDao?.getAllNotesLike(true)?.size}"
+                    numLikes.text = "${noteDao?.getAllNotesLike(true, id_user)?.size}"
+                    numCate.text = "${categoryDao?.getAllCategory(id_user)?.size}"
                 }
             }
         }
@@ -199,6 +202,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     companion object{
         var id_user = 0
+        var user_email = ""
     }
 
 }

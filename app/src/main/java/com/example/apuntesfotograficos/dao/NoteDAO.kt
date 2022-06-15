@@ -9,14 +9,18 @@ interface NoteDAO {
     suspend fun  getAllNotes(id: Int):List<Note>
     @Query("SELECT * FROM Note WHERE note_category = :category AND note_user = :id")
     suspend fun getNoteByCategory(category: String, id: Int):List<Note>
-    @Query("SELECT * FROM Note WHERE note_like = :like")
-    suspend fun getAllNotesLike(like: Boolean):List<Note>
+    @Query("SELECT * FROM Note WHERE note_category = :category")
+    suspend fun getNoteByCategoryName(category: String):List<Note>
+    @Query("SELECT * FROM Note WHERE note_like = :like AND note_user = :id")
+    suspend fun getAllNotesLike(like: Boolean, id: Int):List<Note>
     @Update
     suspend fun updateNote(note: Note)
     @Query("UPDATE Note SET note_like = :like WHERE note_name = :name")
     suspend fun updateNoteLike(like: Boolean, name: String)
+    @Query("UPDATE Note SET note_category = :new_name_cat WHERE note_category = :name_cat")
+    suspend fun updateNoteCategory(new_name_cat: String, name_cat: String)
     @Insert
     suspend fun insertNote(note: Note)
-    @Delete
-    suspend fun deleteNote(note :Note)
+    @Query("DELETE FROM Note WHERE note_category = :cate_name")
+    suspend fun deleteNotes(cate_name :String)
 }
