@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -52,55 +52,12 @@ class CategoryFragment : Fragment() {
         val preferencias  = requireActivity().
         getSharedPreferences("categoryNamePref", Context.MODE_PRIVATE)
         nameCategory = preferencias.getString("cateName", "") ?: "No disponible"
-//        binding.tvMainTitle.text = nameCategory
         initRecycler()
         binding.tvMainTitle.text = nameCategory
         binding.btnBackCategory.setOnClickListener {
             navController?.navigate(R.id.action_categoryFragment_to_notesFragment)
         }
     }
-
-    /*fun initRecycler(){
-        Handler().postDelayed(Runnable {
-            try {
-                lifecycleScope.launch {
-                    var notes = noteDao?.getNoteByCategory(nameCategory)
-                    if(notes!!.size > 0){
-                        val adapter = ImageAdapter(notes, context)
-                        binding.rvImages.layoutManager = LinearLayoutManager(context)
-                        binding.rvImages.adapter = adapter
-                        adapter.setOnItemListener(object : onItemClickListener {
-                            override fun onItemClick(position: Int, id: Int) {
-//                                val bundle = bundleOf("src_image" to "${notes[position].note_src}")
-//                                navController?.navigate(R.id.action_categoryFragment_to_imageFragment, bundle)
-                                when(id){
-                                    R.id.img_card -> {
-                                        val bundle = bundleOf("src_image" to "${notes[position].note_src}")
-                                        navController?.navigate(R.id.action_categoryFragment_to_imageFragment, bundle)
-                                    }
-                                    R.id.icon_like -> {
-                                        lifecycleScope.launch { noteDao?.updateNoteLike(true, notes[position].note_name) }
-                                    }
-                                }
-                            }
-
-                            override fun onItemLongClick(position: Int, id: Int) {
-                                when(id){
-                                    R.id.img_card -> {
-                                        MainActivity.uiUtils.createDialog()
-                                    }
-                                    R.id.icon_like -> {
-                                        lifecycleScope.launch { noteDao?.updateNoteLike(false, notes[position].note_name) }
-                                    }
-                                }
-                            }
-                        })
-                    }
-                }
-            }catch (e: Exception){e.printStackTrace()}
-        },100)
-
-    }*/
 
     fun initRecycler(){
         lifecycleScope.launch {
@@ -112,7 +69,7 @@ class CategoryFragment : Fragment() {
     }
 
     fun showRecyler(notes: List<Note>){
-        adapter = ImageAdapter(notes, context)
+        adapter = ImageAdapter(notes, context,0)
         binding.rvImages.layoutManager = LinearLayoutManager(context)
         binding.rvImages.adapter = adapter
         adapter!!.setOnItemListener(object : onItemClickListener{
@@ -130,8 +87,41 @@ class CategoryFragment : Fragment() {
             }
             override fun onItemLongClick(position: Int, id: Int) {
                 when(id){
-                    R.id.img_card -> {
-//                        MainActivity.uiUtils.createDialog()
+                    R.id.main_container_card -> {
+                        var mainDialog = MainActivity.uiUtils.createDialog("${notes.get(position).note_name}")
+                        val btnDialogCancel = mainDialog.findViewById<Button>(R.id.btn_dialog_cancel)
+                        val btnDialogShare = mainDialog.findViewById<LinearLayout>(R.id.btn_share)
+                        btnDialogShare.visibility = View.GONE
+                        val btnDialogDelete = mainDialog.findViewById<LinearLayout>(R.id.btn_delete)
+                        val btnDialogEdit = mainDialog.findViewById<LinearLayout>(R.id.btn_edit)
+                        btnDialogCancel.setOnClickListener {
+                            mainDialog.dismiss()
+                        }
+                        btnDialogDelete.setOnClickListener {
+                            lifecycleScope.launch {
+                                noteDao?.deleteNote("${notes.get(position).note_name}")
+                            }
+                            initRecycler()
+                            mainDialog.dismiss()
+                        }
+                        btnDialogEdit.setOnClickListener {
+                            mainDialog.dismiss()
+                            lifecycleScope.launch {
+                                var dialog = MainActivity.uiUtils.createDialogEditCate()
+                                val btnDialogOk = dialog.findViewById<Button>(R.id.btn_dialog_ok)
+                                val et_user = dialog.findViewById<EditText>(R.id.et_share)
+                                val tv_title = dialog.findViewById<TextView>(R.id.et_title)
+                                tv_title.text = "Modificar"
+                                et_user.hint = "Nuevo nombre"
+                                btnDialogOk.setOnClickListener {
+                                    lifecycleScope.launch {
+                                        noteDao?.updateNote("${et_user.text}", "${notes.get(position).note_name}")
+                                    }
+                                    dialog.dismiss()
+                                    initRecycler()
+                                }
+                            }
+                        }
                     }
                     R.id.icon_like -> {
                         lifecycleScope.launch {

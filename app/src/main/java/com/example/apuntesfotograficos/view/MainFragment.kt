@@ -64,11 +64,11 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
         binding.tvMainTitle.text = "${getString(R.string.main_title)} ${preferencias.getString("name", "")}"
         rv_recent_notes = binding.rvImages
         rv_recent_notes.layoutManager = LinearLayoutManager(context)
-        initRecycler()
         binding.cardApuntes.setOnClickListener(this)
         binding.cardShareNotes.setOnClickListener(this)
         binding.addNote.setOnClickListener(this)
         binding.btnProfile.setOnClickListener(this)
+        initRecycler()
 
     }
 
@@ -89,13 +89,12 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
             if(notes != null && notes.size > 0){
                 notes = notes.reversed()
                 showRecyler(notes)
-            } else
-                initRecycler()
+            }
         }
     }
 
     fun showRecyler(notes: List<Note>){
-        adapter = ImageAdapter(notes, context)
+        adapter = ImageAdapter(notes, context,0)
         if (adapter != null) {
             rv_recent_notes.adapter = adapter
             adapter!!.setOnItemListener(object : onItemClickListener {
@@ -122,8 +121,41 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
                 override fun onItemLongClick(position: Int, id: Int) {
                     when (id) {
-                        R.id.img_card -> {
-//                            uiUtils.createDialog()
+                        R.id.main_container_card -> {
+                            var mainDialog = uiUtils.createDialog("${notes.get(position).note_name}")
+                            val btnDialogCancel = mainDialog.findViewById<Button>(R.id.btn_dialog_cancel)
+                            val btnDialogShare = mainDialog.findViewById<LinearLayout>(R.id.btn_share)
+                            btnDialogShare.visibility = View.GONE
+                            val btnDialogDelete = mainDialog.findViewById<LinearLayout>(R.id.btn_delete)
+                            val btnDialogEdit = mainDialog.findViewById<LinearLayout>(R.id.btn_edit)
+                            btnDialogCancel.setOnClickListener {
+                                mainDialog.dismiss()
+                            }
+                            btnDialogDelete.setOnClickListener {
+                                lifecycleScope.launch {
+                                    noteDao?.deleteNote("${notes.get(position).note_name}")
+                                }
+                                initRecycler()
+                                mainDialog.dismiss()
+                            }
+                            btnDialogEdit.setOnClickListener {
+                                mainDialog.dismiss()
+                                lifecycleScope.launch {
+                                    var dialog = uiUtils.createDialogEditCate()
+                                    val btnDialogOk = dialog.findViewById<Button>(R.id.btn_dialog_ok)
+                                    val et_user = dialog.findViewById<EditText>(R.id.et_share)
+                                    val tv_title = dialog.findViewById<TextView>(R.id.et_title)
+                                    tv_title.text = "Modificar"
+                                    et_user.hint = "Nuevo nombre"
+                                    btnDialogOk.setOnClickListener {
+                                        lifecycleScope.launch {
+                                            noteDao?.updateNote("${et_user.text}", "${notes.get(position).note_name}")
+                                        }
+                                        dialog.dismiss()
+                                        initRecycler()
+                                    }
+                                }
+                            }
                         }
                         R.id.icon_like -> {
                             lifecycleScope.launch {
@@ -139,21 +171,19 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
 
     fun isSaveNote(){
         var titles = CommonUtils.getListTitles()
-        Handler(Looper.getMainLooper()).postDelayed({
-            titles?.forEach {
-                if(it.contains("$name")){
-                    if(!name.isNullOrBlank()){
-                        lifecycleScope.launch {
-                            noteDao?.insertNote(Note(0, id_user, name,
-                                cate,"${timeStamp}", "n/a",
-                                false, false,"${URL_IMAGES}$it",0))
-                            initRecycler()
-                        }
+        titles?.forEach {
+            if(it.contains("$name")){
+                if(!name.isNullOrBlank()){
+                    lifecycleScope.launch {
+                        var res = noteDao?.insertNote(Note(0, id_user, name,
+                            cate,"${timeStamp}", "n/a",
+                            false, false,"${URL_IMAGES}$it",0))
+//                        initRecycler()
                         name = ""
                     }
                 }
             }
-        },500)
+        }
     }
 
     override fun getCamera():Activity {

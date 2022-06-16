@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.apuntesfotograficos.R
@@ -23,28 +24,46 @@ import java.io.IOException
 import java.net.URL
 
 
-class ImageAdapter(notes:List<Note>?, context: Context?) :
+class ImageAdapter(notes:List<Note>?, context: Context?, type: Int) :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
     lateinit var mListener: onItemClickListener
     var mNote: List<Note>? = notes
     val context = context
 
+    companion object{
+        var typeV = 0
+    }
+
+    init{
+        typeV = type
+    }
+
     class ViewHolder(view: View, listener: onItemClickListener,context: Context?) : RecyclerView.ViewHolder(view) {
         val textView: TextView
         val imgView: ImageView
+        val mainContainer: ConstraintLayout
         val favImg: ImageView
 
         init {
             textView = view.findViewById(R.id.tv_name_card)
             imgView = view.findViewById(R.id.img_card)
+            mainContainer = view.findViewById(R.id.main_container_card)
             favImg = view.findViewById(R.id.icon_like)
-            favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart))
+            if (typeV == 0)
+                favImg.visibility = View.GONE
+            else if (typeV == 1)
+                favImg.visibility = View.VISIBLE
+            favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_favorite))
             favImg.setOnClickListener {
-                favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart_ok))
+                favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_favorite_ok))
                 listener.onItemClick(adapterPosition, favImg.id) }
             favImg.setOnLongClickListener {
-                favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart))
+                favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_favorite))
                 listener.onItemLongClick(adapterPosition, favImg.id)
+                true
+            }
+            mainContainer.setOnLongClickListener {
+                listener.onItemLongClick(adapterPosition, mainContainer.id)
                 true
             }
             imgView.setOnClickListener { listener.onItemClick(adapterPosition, imgView.id) }
@@ -73,9 +92,9 @@ class ImageAdapter(notes:List<Note>?, context: Context?) :
                     .into(viewHolder.imgView);
                 viewHolder.textView.text = mNote?.get(position)?.note_name
                 if (mNote?.get(position)?.note_like!!)
-                    viewHolder.favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart_ok))
+                    viewHolder.favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_favorite_ok))
                 else
-                    viewHolder.favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_heart))
+                    viewHolder.favImg.setImageDrawable(context?.getDrawable(R.drawable.ic_favorite))
             }
         }
     }
@@ -99,6 +118,10 @@ class ImageAdapter(notes:List<Note>?, context: Context?) :
             return mNote!!.size
         else
             return 0
+    }
+
+    fun goneFavorite(){
+
     }
 
     fun setOnItemListener(listener: onItemClickListener){

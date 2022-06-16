@@ -9,7 +9,6 @@ import android.widget.*
 import com.example.apuntesfotograficos.R
 import com.example.apuntesfotograficos.interfaces.onItemClickListener
 import com.example.apuntesfotograficos.model.Category
-import com.example.apuntesfotograficos.presenter.CameraPesenter
 
 class UIUtils(activity: Activity) {
     var mActivity: Activity
@@ -31,18 +30,10 @@ class UIUtils(activity: Activity) {
         return dialog
     }
 
-    fun createDialogCateShare(/*listCategory: List<Category>?*/):Dialog {
+    fun createDialogCateShare():Dialog {
         val dialog = Dialog(mActivity)
         dialog.setContentView(R.layout.dialog_share_note)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//        val spinner_category = dialog.findViewById<Spinner>(R.id.spinner_category)
-//        var mutableList = mutableListOf<String>()
-//        listCategory?.forEach{
-//            mutableList.add(it.cate_name)
-//        }
-//        var array = mutableList.toTypedArray()
-//        val adaterSpinner = ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, array)
-//        spinner_category.adapter = adaterSpinner
         dialog.create()
         dialog.show()
         return dialog

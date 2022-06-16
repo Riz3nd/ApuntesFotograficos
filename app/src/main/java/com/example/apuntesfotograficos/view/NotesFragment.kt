@@ -64,7 +64,7 @@ class NotesFragment : Fragment() {
         Handler().postDelayed(Runnable {
             lifecycleScope.launch {
                 var arrayCat = categoryDao?.getAllCategoryName(id_user)
-                if (arrayCat!!.size > 0) {
+                if (arrayCat != null && arrayCat.size > 0) {
                     var adapter = ArrayAdapter<String>(
                         requireContext(),
                         android.R.layout.simple_list_item_1,

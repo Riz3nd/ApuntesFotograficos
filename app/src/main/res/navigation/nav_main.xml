@@ -120,5 +120,17 @@
         <action
             android:id="@+id/action_shareImagesFragment_to_shareFragment"
             app:destination="@id/shareFragment" />
+        <action
+            android:id="@+id/action_shareImagesFragment_to_shareImageViewFragment"
+            app:destination="@id/shareImageViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shareImageViewFragment"
+        android:name="com.example.apuntesfotograficos.view.ShareImageViewFragment"
+        android:label="fragment_share_image_view"
+        tools:layout="@layout/fragment_share_image_view" >
+        <action
+            android:id="@+id/action_shareImageViewFragment_to_shareImagesFragment"
+            app:destination="@id/shareImagesFragment" />
     </fragment>
 </navigation>
