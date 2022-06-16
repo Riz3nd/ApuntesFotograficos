@@ -8,6 +8,7 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.example.apuntesfotograficos.interfaces.ICamera
 import com.example.apuntesfotograficos.utils.CommonUtils
+import com.example.apuntesfotograficos.view.MainFragment.Companion.myCurrentPhoto
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -67,9 +68,12 @@ class Camera: ICamera.Iterator {
         try{
             val file = File (currentPhotoPath)
             if (file.exists()){
+//                myCurrentPhoto = currentPhotoPath
                 var data = CommonUtils.convertFileToByte(file)
-                if (data!!.size == 0)
+                if (data!!.size == 0){
                     file.delete()
+//                    myCurrentPhoto = ""
+                }
             }
         }catch (e:Exception){
             e.printStackTrace()

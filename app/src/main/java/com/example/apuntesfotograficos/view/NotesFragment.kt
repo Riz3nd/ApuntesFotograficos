@@ -61,7 +61,7 @@ class NotesFragment : Fragment() {
     }
 
     fun loadCategory(){
-        Handler().postDelayed(Runnable {
+//        Handler().postDelayed(Runnable {
             lifecycleScope.launch {
                 var arrayCat = categoryDao?.getAllCategoryName(id_user)
                 if (arrayCat != null && arrayCat.size > 0) {
@@ -137,7 +137,7 @@ class NotesFragment : Fragment() {
                     }
                 }
             }
-        },100)
+//        },100)
     }
 
     override fun onDestroyView() {

@@ -75,7 +75,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     override fun onResume() {
         super.onResume()
 //        initRecycler()
-        isSaveNote()
+        lifecycleScope.launch { isSaveNote() }
     }
 
     override fun onDestroyView() {
@@ -175,11 +175,11 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
             if(it.contains("$name")){
                 if(!name.isNullOrBlank()){
                     lifecycleScope.launch {
-                        var res = noteDao?.insertNote(Note(0, id_user, name,
+                        noteDao?.insertNote(Note(0, id_user, name,
                             cate,"${timeStamp}", "n/a",
                             false, false,"${URL_IMAGES}$it",0))
-//                        initRecycler()
                         name = ""
+                        initRecycler()
                     }
                 }
             }
@@ -204,8 +204,8 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
                             timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
                             name = "${etNameNote.text}"
                             cate = "${spinner_category.selectedItem}"
-                            cameraPresenter.getImage("${name}_${cate}", timeStamp)
                             dialog.dismiss()
+                            cameraPresenter.getImage("${name}_${cate}", timeStamp)
                         }else{
                             Toast.makeText(context,"Debe ingresar un nombre", Toast.LENGTH_LONG).show()
                         }
@@ -233,6 +233,7 @@ class MainFragment : Fragment(), ICamera.View, View.OnClickListener {
     companion object{
         var id_user = 0
         var user_email = ""
+        var myCurrentPhoto = ""
     }
 
 }
